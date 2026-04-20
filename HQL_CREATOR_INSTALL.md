@@ -1,7 +1,8 @@
 # HQL Creator 安装说明
 
 这份文档只负责安装，不负责使用方法。  
-使用方法见 [SKILL.md](./SKILL.md)。
+项目说明见 [README.md](README.md)。  
+使用方法见 [SKILL.md](hql-creator/SKILL.md)。
 
 ## 重要提醒
 
@@ -62,7 +63,7 @@ cp -R hql-creator ~/.hermes/skills/
 
 ## 2. 安装 Python 依赖
 
-进入你刚才安装好的 skill 目录，安装 [requirements.txt](./requirements.txt) 中的依赖。
+进入你刚才安装好的 skill 目录，安装 [requirements.txt](hql-creator/requirements.txt) 中的依赖。
 
 不同 agent 下的 skill 目录分别是：
 
