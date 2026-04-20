@@ -1,8 +1,8 @@
 # HQL-SKILLS
 
 <div align="center">
-  <img src="./assets/hql-creator-icon.png" width="168" alt="HQL-SKILLS Logo" />
-  <h1>HQL-SKILLS</h1>
+  <img src="./assets/hql-creator-icon.png" width="300" alt="HQL-SKILLS Logo" />
+  <h1 style="margin-top: 6px;">HQL-SKILLS</h1>
   <p><strong>🧠 面向 AI Agent 的 HQL 生成与查询 Skill 集合</strong></p>
   <p>
     当前仓库按两个方向拆分：
@@ -33,17 +33,6 @@
 > 📌 这个仓库的目标不是“让模型随手猜一条 HQL”，而是把 HQL 相关能力拆成更稳定、可复用、可演进的 skill 模块。
 
 ---
-
-## ✨ 项目概览
-
-| 项目          | 内容                                               |
-|-------------|--------------------------------------------------|
-| 项目名称        | `HQL-SKILLS`                                     |
-| 项目定位        | 面向 AI Agent 的 HQL 生成与查询 Skill 集合                 |
-| 当前 Skill 数量 | `2`                                              |
-| 核心方向        | 自然语言转 HQL、HQL 发起查询、查询结果格式化                       |
-| 当前主要可用模块    | `hql-creator`                                    |
-| 当前仓库状态      | `hql-creator` 已具备可用内容，`hql-query` 定位已明确但仓库实现仍待补齐 |
 
 ## 🧩 两个 Skill
 
@@ -84,26 +73,39 @@
 把下面这段话发给你的 LLM Agent，让它帮你完成安装：
 
 ```text
-Install and configure HQL-SKILLS by following:
-./HQL_CREATOR_INSTALL.md
-
-Use hql-creator as the currently available skill.
-Treat hql-query as the query-execution/query-formatting skill target, but do not assume it is fully implemented in this repository yet.
+Install and configure hql-skills by following the instructions here:
+https://github.com/EayonLee/hql-skills/blob/main/installation.md
 ```
-
-### 🗂️ 安装信息总览
-
-| 项目               | 说明                                                   |
-|------------------|------------------------------------------------------|
-| 当前安装文档           | [`HQL_CREATOR_INSTALL.md`](./HQL_CREATOR_INSTALL.md) |
-| 当前文档覆盖范围         | 主要覆盖 `hql-creator`                                   |
-| `hql-query` 安装状态 | 当前仓库中尚未提供独立安装内容                                      |
-| Python 依赖        | `pydantic`、`rapidfuzz`、`dateparser`                  |
-| 安装完成后动作          | 重启对应 Agent，让 skill 重新扫描加载                            |
 
 ---
 
-## 🚀 快速开始
+## 🚀 快速开始：从自然语言到 HQL
+
+下面这段演示基于一次真实的输入输出过程做了精简，去掉了中间无效试错，只保留最关键的步骤。
+
+### 📝 用户输入
+
+```text
+生成HQL：查询最近30天内被模型研判过的，并且攻击成功的告警有多少条，根据攻击地址分类，并统计每个攻击地址的数量
+```
+
+### ✅ 输出结果
+
+```sql
+index == "alarm_merge" | where 安全大模型研判 == "攻击成功" and 开始时间 >= now(d-30d) and 开始时间 <= now() | stats count(ID) AS 数量 BY 源地址 | sort -数量
+```
+
+### 🔍 这个演示体现了什么
+
+| 观察点 | 说明 |
+| --- | --- |
+| 自然语言转 HQL | 用户没有直接写 HQL，skill 最终生成了可执行查询语句 |
+| 语义条件处理 | “被模型研判过”“攻击成功” 被正确落入语义层条件 |
+| 时间条件处理 | “最近30天” 被转换为 `now(d-30d)` 到 `now()` |
+| 分组统计处理 | “根据攻击地址分类，并统计数量” 被转换成 `stats count(ID) AS 数量 BY ...` |
+| 字段绑定 | 请求中的“攻击地址”最终绑定为查询字段 `源地址`，这是当前 skill 的字段映射行为之一 |
+
+## 🐛 DEBUG
 
 ### `hql-creator` 常用命令
 
@@ -156,33 +158,6 @@ python3 scripts/main.py --request '{
   }
 }'
 ```
-
-## 🎬 演示：从自然语言到 HQL
-
-下面这段演示基于一次真实的输入输出过程做了精简，去掉了中间无效试错，只保留最关键的步骤。
-
-### 📝 用户输入
-
-```text
-生成HQL：查询最近30天内被模型研判过的，并且攻击成功的告警有多少条，根据攻击地址分类，并统计每个攻击地址的数量
-```
-
-### ✅ 输出结果
-
-```sql
-index == "alarm_merge" | where 安全大模型研判 == "攻击成功" and 开始时间 >= now(d-30d) and 开始时间 <= now() | stats count(ID) AS 数量 BY 源地址 | sort -数量
-```
-
-### 🔍 这个演示体现了什么
-
-| 观察点 | 说明 |
-| --- | --- |
-| 自然语言转 HQL | 用户没有直接写 HQL，skill 最终生成了可执行查询语句 |
-| 语义条件处理 | “被模型研判过”“攻击成功” 被正确落入语义层条件 |
-| 时间条件处理 | “最近30天” 被转换为 `now(d-30d)` 到 `now()` |
-| 分组统计处理 | “根据攻击地址分类，并统计数量” 被转换成 `stats count(ID) AS 数量 BY ...` |
-| 字段绑定 | 请求中的“攻击地址”最终绑定为查询字段 `源地址`，这是当前 skill 的字段映射行为之一 |
-
 
 ## 🧠 hql-creator
 
@@ -290,7 +265,7 @@ hql-skills/
 
 | 文档                     | 链接                                                                                               |
 |------------------------|--------------------------------------------------------------------------------------------------|
-| 安装说明                   | [`HQL_CREATOR_INSTALL.md`](./HQL_CREATOR_INSTALL.md)                                             |
+| 安装说明                   | [`HQL_CREATOR_INSTALL.md`](installation.md)                                             |
 | `hql-creator` Skill 文档 | [`hql-creator/SKILL.md`](./hql-creator/SKILL.md)                                                 |
 | 公共请求契约                 | [`hql-creator/references/request_contract.md`](./hql-creator/references/request_contract.md)     |
 | Source 路由规则            | [`hql-creator/references/source_routing.md`](./hql-creator/references/source_routing.md)         |
