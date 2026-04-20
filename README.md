@@ -14,20 +14,7 @@
     <img alt="Agents" src="https://img.shields.io/badge/Agents-5-7c3aed?style=flat-square" />
     <img alt="Status" src="https://img.shields.io/badge/Status-Active%20Build-f59e0b?style=flat-square" />
   </p>
-  <p>
-    <a href="#-项目概览">项目概览</a>
-    ·
-    <a href="#-两个-skill">两个 Skill</a>
-    ·
-    <a href="#-当前已说明安装的-agent">Agent 支持</a>
-    ·
-    <a href="#-安装">安装</a>
-    ·
-    <a href="#-语法支持矩阵hql-creator">语法支持矩阵</a>
-  </p>
 </div>
-
-> 📌 这个仓库的目标不是“让模型随手猜一条 HQL”，而是把 HQL 相关能力拆成更稳定、可复用、可演进的 skill 模块。
 
 ---
 
