@@ -1,6 +1,5 @@
 <div align="center">
   <img src="./assets/hql-creator-icon.png" width="300" alt="HQL-SKILLS Logo" />
-  <h1 style="margin-top: 6px;">HQL-SKILLS</h1>
   <p><strong>🧠 面向 AI Agent 的 HQL 生成与查询 Skill 集合</strong></p>
   <p>
     当前仓库按两个方向拆分：
