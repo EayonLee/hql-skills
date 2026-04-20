@@ -1,5 +1,3 @@
-# HQL-SKILLS
-
 <div align="center">
   <img src="./assets/hql-creator-icon.png" width="300" alt="HQL-SKILLS Logo" />
   <h1 style="margin-top: 6px;">HQL-SKILLS</h1>
