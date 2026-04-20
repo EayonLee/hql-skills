@@ -1,0 +1,2353 @@
+{
+  "commands": [
+    {
+      "name": "append",
+      "entry_type": "command",
+      "summary": "将子查询结果附加到左侧查询结果。",
+      "syntax": "append [<subsearch>]",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "append 会在左侧查询执行完成后启动子查询，并把子查询结果直接追加到左侧结果后，不做字段关联。"
+        },
+        {
+          "title": "语法",
+          "content": "append [<subsearch>]"
+        },
+        {
+          "title": "用法",
+          "content": "适合把总量、补充样本或额外结果集直接拼接到当前结果末尾。与 join 不同，append 不按键关联。"
+        },
+        {
+          "title": "示例",
+          "content": "平台语义示例：... | append [ ... ]"
+        },
+        {
+          "title": "注意",
+          "content": "append 必须携带方括号子查询；子查询返回的数据量仍会影响整体执行成本。"
+        },
+        {
+          "title": "相关命令",
+          "content": "join、subsearch"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "合并命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "特点",
+              "简单追加，不做字段关联"
+            ]
+          ]
+        },
+        {
+          "title": "必要参数",
+          "headers": [
+            "参数",
+            "说明"
+          ],
+          "rows": [
+            [
+              "`<subsearch>`",
+              "方括号子查询；在左侧查询完成后执行，并把结果原样追加到当前结果集后。"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "join",
+        "subsearch"
+      ],
+      "canonical_examples": [
+        "index == \"alarm_merge\" | where 开始时间 >= now(d-7d) and 开始时间 <= now() | stats count(id) BY sae_rule_id | append [index == \"alarm_merge\" | where 开始时间 >= now(d-7d) and 开始时间 <= now() | stats count(id) AS total]"
+      ],
+      "notes": [
+        "子查询在左侧查询之后执行，结果直接追加。",
+        "子查询中的 index 仍遵循当前 skill 的严格写法。"
+      ],
+      "intent_tags": [
+        "append",
+        "multi_result"
+      ],
+      "input_shape": "dataset",
+      "output_shape": "dataset",
+      "supports_subquery": true,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [
+        "multi_result",
+        "explicit_intermediate_output"
+      ],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 45
+    },
+    {
+      "name": "autoregress",
+      "entry_type": "command",
+      "summary": "把前序结果的字段值复制到当前结果。",
+      "syntax": "autoregress <field> ([AS <newfield>] <int> | <int>-<int>)",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "把前序结果的字段值复制到当前结果。"
+        },
+        {
+          "title": "语法",
+          "content": "autoregress <field> ([AS <newfield>] <int> | <int>-<int>)"
+        },
+        {
+          "title": "示例",
+          "content": "index == \"event*\" | where 发生时间 >= now(d-7d) and 发生时间 <= now() | stats count(id) AS count BY 源地址 | sort 源地址 | autoregress count AS prev 1"
+        },
+        {
+          "title": "注意",
+          "content": "通常用于时间序列同比或环比分析。"
+        },
+        {
+          "title": "相关命令",
+          "content": "stats、sort"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "窗口命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "用途",
+              "时间序列同比或环比分析"
+            ]
+          ]
+        },
+        {
+          "title": "参数",
+          "headers": [
+            "参数",
+            "说明"
+          ],
+          "rows": [
+            [
+              "`<field>`",
+              "源字段名称"
+            ],
+            [
+              "`<int>`",
+              "单个偏移量"
+            ],
+            [
+              "`<int>-<int>`",
+              "偏移范围"
+            ],
+            [
+              "`AS <newfield>`",
+              "指定新字段名"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "stats",
+        "sort"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where 发生时间 >= now(d-7d) and 发生时间 <= now() | stats count(id) AS count BY 源地址 | sort 源地址 | autoregress count AS prev 1"
+      ],
+      "notes": [
+        "通常用于时间序列同比或环比分析。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    },
+    {
+      "name": "bucket",
+      "entry_type": "command",
+      "summary": "对时间或数值字段分桶，产出新的桶字段。",
+      "syntax": "bucket [<bucket-options>...] <field> [AS <newfield>]",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "对时间或数值字段分桶，产出新的桶字段。"
+        },
+        {
+          "title": "语法",
+          "content": "bucket [<bucket-options>...] <field> [AS <newfield>]"
+        },
+        {
+          "title": "示例",
+          "content": "index == \"alarm_merge\" | where 开始时间 >= now(d-7d) and 开始时间 <= now() | bucket span='1d' 开始时间 AS _time | stats count(id) BY _time"
+        },
+        {
+          "title": "注意",
+          "content": "常见选项有 span、minspan、bins、start、end。"
+        },
+        {
+          "title": "相关命令",
+          "content": "stats、chart、xyseries"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "转换命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "输出",
+              "新增桶字段"
+            ]
+          ]
+        },
+        {
+          "title": "常用选项",
+          "headers": [
+            "选项",
+            "示例",
+            "说明"
+          ],
+          "rows": [
+            [
+              "`span`",
+              "`1d`",
+              "时间或数值间隔"
+            ],
+            [
+              "`minspan`",
+              "`1m`",
+              "最小时间间隔"
+            ],
+            [
+              "`bins`",
+              "`50`",
+              "最大分桶数"
+            ],
+            [
+              "`start/end`",
+              "`start=0 end=100`",
+              "数值区间分桶"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "stats",
+        "chart",
+        "xyseries"
+      ],
+      "canonical_examples": [
+        "index == \"alarm_merge\" | where 开始时间 >= now(d-7d) and 开始时间 <= now() | bucket span='1d' 开始时间 AS _time | stats count(id) BY _time"
+      ],
+      "notes": [
+        "常见选项有 span、minspan、bins、start、end。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    },
+    {
+      "name": "chart",
+      "entry_type": "command",
+      "summary": "将查询结果转换为 BI 渲染所需的数据格式，可展示柱状图、折线图、面积图、饼图等图表。",
+      "syntax": "chart [panel=<panel-type> ...] [<y-data-fieldList> | agg=<stats-agg-term>] [BY <row-split> [<column-split>]]",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "chart 用于把查询结果转换成 BI 图表数据。可以直接渲染现有字段，也可以在 chart 内指定聚合方式。"
+        },
+        {
+          "title": "语法",
+          "content": "chart [panel=<panel-type> ...] [<y-data-fieldList> | agg=<stats-agg-term>] [BY <row-split> [<column-split>]]"
+        },
+        {
+          "title": "用法",
+          "content": "panel 指定图表类型；`<y-data-fieldList>` 与 `agg=` 二选一。只给一个 BY 字段时，它通常作为 x 轴；同时给出 `row-split` 和 `column-split` 时，前者常作为 x 轴，后者常作为图例/列拆分。"
+        },
+        {
+          "title": "示例",
+          "content": "可以直接对原表字段做 BI 渲染，也可以先通过 stats / bucket / xyseries 生成适合绘图的结果，再交给 chart。"
+        },
+        {
+          "title": "注意",
+          "content": "不同 panel 对字段布局要求不同，实际生成时通常先做聚合或透视，再接 chart。"
+        },
+        {
+          "title": "相关命令",
+          "content": "stats、xyseries、bucket"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "可视化命令"
+            ],
+            [
+              "位置",
+              "语句末尾或接近末尾"
+            ],
+            [
+              "输出",
+              "BI 图表渲染数据"
+            ]
+          ]
+        },
+        {
+          "title": "panel 类型",
+          "headers": [
+            "图表类型",
+            "值"
+          ],
+          "rows": [
+            [
+              "指标卡",
+              "stat"
+            ],
+            [
+              "基础柱状图",
+              "bar"
+            ],
+            [
+              "分组柱状图",
+              "groupbar"
+            ],
+            [
+              "百分比堆叠柱形图",
+              "stackpecentbar"
+            ],
+            [
+              "基础折线图",
+              "line"
+            ],
+            [
+              "多条折线图",
+              "multiline"
+            ],
+            [
+              "基础条形图",
+              "graph"
+            ],
+            [
+              "分组条形图",
+              "groupgraph"
+            ],
+            [
+              "堆叠条形图",
+              "stackgraph"
+            ],
+            [
+              "百分比堆叠条形图",
+              "stackpecentgraph"
+            ],
+            [
+              "基础面积图",
+              "area"
+            ],
+            [
+              "堆叠面积图",
+              "stackarea"
+            ],
+            [
+              "双轴图",
+              "biaxial"
+            ],
+            [
+              "饼图",
+              "sector"
+            ],
+            [
+              "环形图",
+              "pie"
+            ],
+            [
+              "玫瑰图",
+              "rose"
+            ],
+            [
+              "词云",
+              "word"
+            ],
+            [
+              "散点图/气泡图",
+              "Scatter"
+            ],
+            [
+              "热力图",
+              "heat"
+            ],
+            [
+              "表格",
+              "table"
+            ],
+            [
+              "聚合表格",
+              "aggtable"
+            ]
+          ]
+        },
+        {
+          "title": "参数组合",
+          "headers": [
+            "参数",
+            "说明"
+          ],
+          "rows": [
+            [
+              "`panel=<panel-type>`",
+              "指定 BI 图表类型。"
+            ],
+            [
+              "`<y-data-fieldList>`",
+              "直接指定一个或多个 y 轴字段；与 `agg=` 互斥。"
+            ],
+            [
+              "`agg=<stats-agg-term>`",
+              "在 chart 内指定聚合方式，由 chart 直接完成聚合后渲染。"
+            ],
+            [
+              "`BY <row-split> [<column-split>]`",
+              "指定 x 轴和图例/列拆分字段。"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "stats",
+        "xyseries",
+        "bucket"
+      ],
+      "canonical_examples": [
+        "index == \"alarm_merge\" | where 开始时间 >= now(d-7d) and 开始时间 <= now() | bucket span='1d' 开始时间 AS _time | stats count(id) AS 告警数 BY _time | chart panel='line' 告警数 BY _time",
+        "index == \"alarm_merge\" | where 开始时间 >= now(d-7d) and 开始时间 <= now() | stats count(id) AS _id BY 告警等级, 告警阶段 | chart panel='groupbar' _id BY 告警等级 告警阶段"
+      ],
+      "notes": [
+        "当前 skill 只校验 panel 值是否合法，不自动推导所有图表布局。",
+        "canonical 示例中的 index、where、时间与 head 仍遵循当前 skill 的严格规则。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    },
+    {
+      "name": "eval",
+      "entry_type": "command",
+      "summary": "执行 Painless 表达式，把结果写入目标字段，或返回新的 doc / Map 对象。",
+      "syntax": "eval <painless-expression>",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "eval 会执行 Painless 表达式，并把结果写入目标字段。若字段已存在，会被覆盖；表达式也可以直接返回当前 doc 或新的 Map 对象。"
+        },
+        {
+          "title": "语法",
+          "content": "eval <painless-expression>"
+        },
+        {
+          "title": "用法",
+          "content": "常规写法是计算新字段或改写已有字段。若表达式涉及可能不存在的字段，建议先做非空判断，或用 `try { ... } catch (Exception e) { ... }` 做防守。"
+        },
+        {
+          "title": "示例",
+          "content": "创建字段：`... | eval def _time = 接收时间 - 发生时间; def low = 事件名称.toLowerCase(); long _ip = ipToLong(源地址)`；返回新对象：`... | eval def map = [:]; map['时间字段'] = 发生时间; if (exist 源地址) { map.ip = 源地址 } return map;`；异常捕获：`... | eval try { ... } catch (Exception e) { return doc; }`。"
+        },
+        {
+          "title": "注意",
+          "content": "eval 与 where 使用同一套 Painless 语法，但 eval 的目标是生成/改写字段，而不是返回布尔值。"
+        },
+        {
+          "title": "相关命令",
+          "content": "where、fields"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "计算命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "脚本语言",
+              "Painless"
+            ]
+          ]
+        },
+        {
+          "title": "常见模式",
+          "headers": [
+            "模式",
+            "说明"
+          ],
+          "rows": [
+            [
+              "写入字段",
+              "给目标字段赋值，或覆盖已有字段。"
+            ],
+            [
+              "返回当前 doc",
+              "发生异常或只想保留原始记录时返回 `doc`。"
+            ],
+            [
+              "返回新 Map",
+              "构造新的 Map 对象并 `return map`。"
+            ],
+            [
+              "异常防守",
+              "通过 `try/catch` 处理字段缺失、转换异常等情况。"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "where",
+        "fields"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where 发生时间 >= now(d-1d) and 发生时间 <= now() | eval 时延 = 接收时间 - 发生时间 | head 100"
+      ],
+      "notes": [
+        "`eval` 内部允许使用单等号做赋值，这不改变过滤表达式必须使用 `==` 的规则。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    },
+    {
+      "name": "fields",
+      "entry_type": "command",
+      "summary": "保留或移除字段。",
+      "syntax": "fields [+|-] <field-list>",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "保留或移除字段。"
+        },
+        {
+          "title": "语法",
+          "content": "fields [+|-] <field-list>"
+        },
+        {
+          "title": "示例",
+          "content": "index == \"event*\" | where 源地址 == \"1.1.1.1\" | fields 源地址, 目的地址, 事件名称, 发生时间 | head 100"
+        },
+        {
+          "title": "注意",
+          "content": "在管道早期精简字段可以减少后续传输和渲染成本。"
+        },
+        {
+          "title": "相关命令",
+          "content": "eval、rename"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "字段命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "性能",
+              "减少结果字段数量"
+            ]
+          ]
+        },
+        {
+          "title": "符号",
+          "headers": [
+            "符号",
+            "说明"
+          ],
+          "rows": [
+            [
+              "`+`",
+              "保留指定字段"
+            ],
+            [
+              "`-`",
+              "移除指定字段"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "eval",
+        "rename"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where 源地址 == \"1.1.1.1\" | fields 源地址, 目的地址, 事件名称, 发生时间 | head 100"
+      ],
+      "notes": [
+        "在管道早期精简字段可以减少后续传输和渲染成本。"
+      ],
+      "intent_tags": [
+        "projection",
+        "display_fields",
+        "subquery_projection"
+      ],
+      "input_shape": "dataset",
+      "output_shape": "dataset",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [
+        "where",
+        "top",
+        "stats",
+        "sort",
+        "join",
+        "append"
+      ],
+      "can_precede": [],
+      "cost_rank": 4
+    },
+    {
+      "name": "format",
+      "entry_type": "command",
+      "summary": "把子查询结果格式化为布尔表达式并回填主查询过滤条件；当主查询最终要返回明细，而筛选值需要由 top/stats 等子查询先算出来时，优先使用 format。",
+      "syntax": "format [mvsep=\"<separator>\"] [maxresults=<int>] [\"<row prefix>\" \"<column prefix>\" \"<column separator>\" \"<column end>\" \"<row separator>\" \"<row end>\"]",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "format 通常用于过滤条件里的子查询，把子查询结果转换成布尔表达式，再回填到主查询 where 中。当主查询最终返回明细，而筛选值需要由 top/stats 等子查询先求出时，优先使用 format。"
+        },
+        {
+          "title": "语法",
+          "content": "format [mvsep=\"<separator>\"] [maxresults=<int>] [\"<row prefix>\" \"<column prefix>\" \"<column separator>\" \"<column end>\" \"<row separator>\" \"<row end>\"]"
+        },
+        {
+          "title": "用法",
+          "content": "常与 `where [ ... | format ]` 配合使用。最典型的场景是“先在子查询里求 top N / 聚合结果，再把求出的字段值回填到主查询过滤条件中”。`mvsep` 控制多值字段分隔符，后面的六个字符串参数依次控制 row / column 的前后缀与分隔方式。"
+        },
+        {
+          "title": "示例",
+          "content": "`... | head 2 | fields 数据源,事件名称 | format`"
+        },
+        {
+          "title": "注意",
+          "content": "只在子查询末尾使用；默认包装值会生成按行 OR、按列 AND 的布尔表达式。若用户明确要求同时展示中间聚合结果，优先改用多条查询或 append，而不是把 format 结果当最终输出。"
+        },
+        {
+          "title": "相关命令",
+          "content": "map、join、subsearch"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "子查询命令"
+            ],
+            [
+              "位置",
+              "子查询末尾"
+            ],
+            [
+              "用途",
+              "将结果转成布尔表达式"
+            ]
+          ]
+        },
+        {
+          "title": "参数与默认值",
+          "headers": [
+            "参数",
+            "说明",
+            "默认值"
+          ],
+          "rows": [
+            [
+              "`mvsep`",
+              "多值字段的分隔符。",
+              "`||`"
+            ],
+            [
+              "`maxresults`",
+              "返回结果数量上限；0 表示不限制。",
+              "`0`"
+            ],
+            [
+              "`row prefix`",
+              "每一行表达式的前缀。",
+              "`(`"
+            ],
+            [
+              "`column prefix`",
+              "每列表达式的前缀。",
+              "`(`"
+            ],
+            [
+              "`column separator`",
+              "列之间的分隔符。",
+              "`&&`"
+            ],
+            [
+              "`column end`",
+              "每列表达式的结束符。",
+              "`)`"
+            ],
+            [
+              "`row separator`",
+              "行之间的分隔符。",
+              "`||`"
+            ],
+            [
+              "`row end`",
+              "每行表达式的结束符。",
+              "`)`"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "map",
+        "join",
+        "subsearch",
+        "top",
+        "stats",
+        "fields",
+        "where"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where [index == \"alarm_merge\" | where 告警等级 == \"高\" | fields 源地址 | head 100 | format] | head 100",
+        "index == \"alarm_merge\" | where 处置状态 != \"待处置\" and [index == \"alarm_merge\" | where 处置状态 != \"待处置\" | top 3 威胁类型 | fields 威胁类型 | format] | fields 源地址 | head 100"
+      ],
+      "notes": [
+        "当前 skill 只把 format 放在子查询末尾使用。",
+        "顶层 canonical pipeline 仍然使用 `index == \"<index>\" | where ... | head N`。",
+        "当子查询只负责求出一个或一组字段值，供主查询继续过滤并返回明细时，优先 format，而不是拆成两条 HQL。"
+      ],
+      "intent_tags": [
+        "subquery_filter",
+        "derived_filter",
+        "ranked_detail"
+      ],
+      "input_shape": "ranking_top_n",
+      "output_shape": "filter_expression",
+      "supports_subquery": true,
+      "usable_in_where_subquery": true,
+      "returns_filter_expression": true,
+      "preferred_for": [
+        "derived_filter",
+        "top_n_select",
+        "ranked_detail",
+        "subquery_filter"
+      ],
+      "avoid_when": [
+        "explicit_multi_result",
+        "needs_joined_result",
+        "join_required"
+      ],
+      "can_follow": [
+        "fields",
+        "top",
+        "stats",
+        "head"
+      ],
+      "can_precede": [],
+      "cost_rank": 10
+    },
+    {
+      "name": "head",
+      "entry_type": "command",
+      "summary": "返回前 N 条结果；只在请求显式要求限制结果时使用。",
+      "syntax": "head <N>",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "返回前 N 条结果。当前 skill 只在结构化请求显式要求限制结果时补 `head`；未显式给 limit 的明细查询默认不加 `head`。"
+        },
+        {
+          "title": "语法",
+          "content": "head <N>"
+        },
+        {
+          "title": "示例",
+          "content": "index == \"event*\" | where 发生时间 >= now(d-1d) and 发生时间 <= now() | head 20"
+        },
+        {
+          "title": "注意",
+          "content": "只有请求显式要求限制结果时才补 `head`；纯 `stats` / `chart` / `xyseries` 聚合查询默认也不补 `head`。"
+        },
+        {
+          "title": "相关命令",
+          "content": "tail、top"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "限制命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "默认策略",
+              "默认不补 `head`；只有结构化请求显式指定时才添加限制"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "tail",
+        "top"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where 发生时间 >= now(d-1d) and 发生时间 <= now() | head 20"
+      ],
+      "notes": [
+        "默认不补 `head`；只有结构化请求显式指定时才添加结果限制。",
+        "纯聚合查询只有在用户明确要求截断聚合结果时才加 `head`。"
+      ],
+      "intent_tags": [
+        "limit",
+        "detail_limit"
+      ],
+      "input_shape": "dataset",
+      "output_shape": "dataset",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [
+        "where",
+        "fields",
+        "sort",
+        "join",
+        "append"
+      ],
+      "can_precede": [],
+      "cost_rank": 2
+    },
+    {
+      "name": "join",
+      "entry_type": "command",
+      "summary": "使用子搜索结果与主搜索结果按字段条件做关联，可形成宽表结果。",
+      "syntax": "join [join-options]... left=<alias> right=<alias> where <left-alias>.<left-field>=<right-alias>.<right-field> [AND ...] [<subsearch>]",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "join 会把主查询结果与子查询结果按字段条件合并。多个 join 可以串联或嵌套，最终形成宽表结果集。"
+        },
+        {
+          "title": "语法",
+          "content": "join [join-options]... left=<alias> right=<alias> where <left-alias>.<left-field>=<right-alias>.<right-field> [AND ...] [<subsearch>]"
+        },
+        {
+          "title": "必要参数",
+          "content": "必须提供方括号子查询、left / right 别名，以及 where 中的别名.字段关联条件。"
+        },
+        {
+          "title": "用法",
+          "content": "join 适合一对一、一对多、多对一或多对多关联。子查询会优先执行并充当 Build 表；`max=1` 常用于只保留首个匹配。"
+        },
+        {
+          "title": "示例",
+          "content": "平台语义示意：`... | join max=1 left=l right=r where l.目的地址=r.ip_address [ ... ]`"
+        },
+        {
+          "title": "注意",
+          "content": "平台语法说明里的 join 条件示意使用 `=`；当前 skill 为了和严格审查器保持一致，canonical 示例统一写 `==`。"
+        },
+        {
+          "title": "相关命令",
+          "content": "append、format、subsearch"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "连接命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "执行特点",
+              "子查询优先执行，适合构建宽表"
+            ]
+          ]
+        },
+        {
+          "title": "连接选项",
+          "headers": [
+            "选项",
+            "说明",
+            "默认值"
+          ],
+          "rows": [
+            [
+              "`type`",
+              "连接类型，可取 `inner` 或 `left`。",
+              "`inner`"
+            ],
+            [
+              "`overwrite`",
+              "右侧字段与左侧同名时，是否覆盖左侧字段。",
+              "`true`"
+            ],
+            [
+              "`max`",
+              "每条左侧结果可连接的最大右侧结果数；`0` 表示不限制。",
+              "`0`"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "append",
+        "format",
+        "subsearch"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where 发生时间 >= now(d-1d) and 发生时间 <= now() | join max=1 left=e right=a where e.源地址 == a.源地址 [index == \"alarm_merge\" | fields 源地址, 告警名称 | head 100] | head 50"
+      ],
+      "notes": [
+        "平台语义里的 join 条件示意使用 `=`；当前 skill 为了统一严格比较规则和审查器，生成示例统一写 `==`。",
+        "子查询优先执行，应注意结果规模与内存占用。"
+      ],
+      "intent_tags": [
+        "join",
+        "merge_result"
+      ],
+      "input_shape": "dataset",
+      "output_shape": "dataset",
+      "supports_subquery": true,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [
+        "join_result",
+        "enrich_result"
+      ],
+      "avoid_when": [
+        "derived_filter_only"
+      ],
+      "can_follow": [
+        "where",
+        "sort"
+      ],
+      "can_precede": [],
+      "cost_rank": 40
+    },
+    {
+      "name": "makeresults",
+      "entry_type": "command",
+      "summary": "生成测试或占位结果集。",
+      "syntax": "makeresults [<count>]",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "生成测试或占位结果集。"
+        },
+        {
+          "title": "语法",
+          "content": "makeresults [<count>]"
+        },
+        {
+          "title": "示例",
+          "content": "makeresults 1 | eval ip = \"1.1.1.1\" | fields ip"
+        },
+        {
+          "title": "注意",
+          "content": "主要用于模板、调试或与 map 组合。"
+        },
+        {
+          "title": "相关命令",
+          "content": "eval、map"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "生成命令"
+            ],
+            [
+              "位置",
+              "语句开头"
+            ],
+            [
+              "用途",
+              "生成占位结果集"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "eval",
+        "map"
+      ],
+      "canonical_examples": [
+        "makeresults 1 | eval ip = \"1.1.1.1\" | fields ip"
+      ],
+      "notes": [
+        "主要用于模板、调试或与 map 组合。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    },
+    {
+      "name": "map",
+      "entry_type": "command",
+      "summary": "对每条输入结果执行一个 HQL 模板。",
+      "syntax": "map [maxsearches=<int>] \"<search-template>\"",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "对每条输入结果执行一个 HQL 模板。"
+        },
+        {
+          "title": "语法",
+          "content": "map [maxsearches=<int>] \"<search-template>\""
+        },
+        {
+          "title": "示例",
+          "content": "makeresults 1 | eval ip = \"1.1.1.1\" | map maxsearches=1 \"index == \\\"event*\\\" | where 源地址 == '$ip$' | head 100\""
+        },
+        {
+          "title": "注意",
+          "content": "每条输入结果都会触发一次查询，大数据集下要慎用。"
+        },
+        {
+          "title": "相关命令",
+          "content": "format、join"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "循环命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "性能",
+              "每条输入结果触发一次查询"
+            ]
+          ]
+        },
+        {
+          "title": "参数",
+          "headers": [
+            "参数",
+            "说明"
+          ],
+          "rows": [
+            [
+              "`maxsearches`",
+              "并发执行的最大搜索数"
+            ],
+            [
+              "`<search-template>`",
+              "使用 `$字段名$` 插值的 HQL 模板"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "format",
+        "join"
+      ],
+      "canonical_examples": [
+        "makeresults 1 | eval ip = \"1.1.1.1\" | map maxsearches=1 \"index == \\\"event*\\\" | where 源地址 == '$ip$' | head 100\""
+      ],
+      "notes": [
+        "每条输入结果都会触发一次查询，大数据集下要慎用。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    },
+    {
+      "name": "search",
+      "entry_type": "command",
+      "summary": "作为语句起始命令构建下推过滤表达式。",
+      "syntax": "[search] <logical-expression>",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "search 用于构建查询起始阶段的下推过滤，命令字本身可以省略。"
+        },
+        {
+          "title": "语法",
+          "content": "[search] <logical-expression>"
+        },
+        {
+          "title": "用法",
+          "content": "search 只处理布尔表达式和比较表达式。左侧通常是字段，右侧是常量或字段；特殊字段 `index` 表示索引类型。不支持函数调用。需要函数或完整 Painless 表达式时，应改用 where。"
+        },
+        {
+          "title": "示例",
+          "content": "字段-值匹配：`目的地址 == \"10.9.165.8\"`；布尔组合：`主机名称 == \"5CG0341W2F\" and 数据源 != \"360NDR\"`；正则匹配：`事件名称 rlike /.*web.*/`。"
+        },
+        {
+          "title": "注意",
+          "content": "平台支持 search，但当前 skill 的 canonical pipeline 顶层不直接生成 search。"
+        },
+        {
+          "title": "相关命令",
+          "content": "where"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "起始过滤命令"
+            ],
+            [
+              "位置",
+              "语句开头"
+            ],
+            [
+              "执行阶段",
+              "查询下推"
+            ]
+          ]
+        },
+        {
+          "title": "表达式约束",
+          "headers": [
+            "规则",
+            "说明"
+          ],
+          "rows": [
+            [
+              "命令字",
+              "`search` 关键字可以省略。"
+            ],
+            [
+              "表达式类型",
+              "只支持布尔表达式与比较表达式。"
+            ],
+            [
+              "特殊字段",
+              "`index` 可作为索引类型字段参与比较。"
+            ],
+            [
+              "函数调用",
+              "不支持函数调用。"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "where"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where 主机名称 == \"5CG0341W2F\" and 数据源 != \"360NDR\" | head 100"
+      ],
+      "notes": [
+        "平台支持 search，但当前 skill 统一输出 `index == \"<index>\" | where ... | head N`。",
+        "顶层 canonical pipeline 的过滤统一进入 where。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    },
+    {
+      "name": "sort",
+      "entry_type": "command",
+      "summary": "按一个或多个字段排序。",
+      "syntax": "sort <sort-field-list>",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "按一个或多个字段排序。"
+        },
+        {
+          "title": "语法",
+          "content": "sort <sort-field-list>"
+        },
+        {
+          "title": "示例",
+          "content": "index == \"event*\" | where 发生时间 >= now(d-7d) and 发生时间 <= now() | sort -发生时间 | head 50"
+        },
+        {
+          "title": "注意",
+          "content": "降序字段使用 - 前缀，升序可省略或使用 +。"
+        },
+        {
+          "title": "相关命令",
+          "content": "head、top"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "排序命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "用途",
+              "按一个或多个字段排序"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "head",
+        "top"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where 发生时间 >= now(d-7d) and 发生时间 <= now() | sort -发生时间 | head 50"
+      ],
+      "notes": [
+        "降序字段使用 - 前缀，升序可省略或使用 +。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    },
+    {
+      "name": "stats",
+      "entry_type": "command",
+      "summary": "对结果集做聚合统计。",
+      "syntax": "stats <stats-function>(field) [AS alias]... [BY field-list]",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "对结果集做聚合统计。"
+        },
+        {
+          "title": "语法",
+          "content": "stats <stats-function>(field) [AS alias]... [BY field-list]"
+        },
+        {
+          "title": "示例",
+          "content": "index == \"alarm_merge\" | where 开始时间 >= now(d-30d) and 开始时间 <= now() | stats count(id) AS 安全大模型研判数量 BY 安全大模型研判"
+        },
+        {
+          "title": "注意",
+          "content": "`stats` 必须至少包含一个 `function(field)`；分组计数默认写成 `stats count(id) AS <分组字段>数量 BY <分组字段>`。"
+        },
+        {
+          "title": "相关命令",
+          "content": "top、chart、xyseries"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "聚合命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "输出",
+              "聚合结果表"
+            ]
+          ]
+        },
+        {
+          "title": "聚合函数",
+          "headers": [
+            "函数",
+            "说明"
+          ],
+          "rows": [
+            [
+              "avg",
+              "见 skill 聚合统计规则"
+            ],
+            [
+              "count",
+              "见 skill 聚合统计规则"
+            ],
+            [
+              "dc",
+              "见 skill 聚合统计规则"
+            ],
+            [
+              "estdc",
+              "见 skill 聚合统计规则"
+            ],
+            [
+              "max",
+              "见 skill 聚合统计规则"
+            ],
+            [
+              "min",
+              "见 skill 聚合统计规则"
+            ],
+            [
+              "range",
+              "见 skill 聚合统计规则"
+            ],
+            [
+              "sum",
+              "见 skill 聚合统计规则"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "top",
+        "chart",
+        "xyseries"
+      ],
+      "canonical_examples": [
+        "index == \"alarm_merge\" | where 开始时间 >= now(d-30d) and 开始时间 <= now() | stats count(id) AS 安全大模型研判数量 BY 安全大模型研判",
+        "index == \"alarm_merge\" | where 开始时间 >= now(d-30d) and 开始时间 <= now() | stats count(id) AS 总数"
+      ],
+      "notes": [
+        "`stats` 段必须出现至少一个合法的 `stats-function(field)`。",
+        "纯聚合查询默认不补 `head`。",
+        "错误示例：`stats count BY 字段`。"
+      ],
+      "intent_tags": [
+        "aggregation",
+        "group_count"
+      ],
+      "input_shape": "dataset",
+      "output_shape": "aggregate_result",
+      "supports_subquery": true,
+      "usable_in_where_subquery": true,
+      "returns_filter_expression": false,
+      "preferred_for": [
+        "group_count",
+        "aggregation"
+      ],
+      "avoid_when": [
+        "detail_only"
+      ],
+      "can_follow": [
+        "where",
+        "sort"
+      ],
+      "can_precede": [
+        "sort",
+        "fields",
+        "chart",
+        "append"
+      ],
+      "cost_rank": 20
+    },
+    {
+      "name": "subsearch",
+      "entry_type": "syntax",
+      "summary": "方括号子查询语法。",
+      "syntax": "[<hql>]",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "方括号子查询语法。"
+        },
+        {
+          "title": "语法",
+          "content": "[<hql>]"
+        },
+        {
+          "title": "示例",
+          "content": "index == \"event*\" | join left=e right=a where e.源地址 == a.源地址 [index == \"alarm_merge\" | fields 源地址, 告警名称 | head 100] | head 100"
+        },
+        {
+          "title": "注意",
+          "content": "子查询内部也只使用 alarm_merge、alarm、event* 三种 index。"
+        },
+        {
+          "title": "相关命令",
+          "content": "join、append、format"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "语法结构"
+            ],
+            [
+              "位置",
+              "由方括号包裹"
+            ],
+            [
+              "用途",
+              "供 `join`、`append`、`format` 等命令使用"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "join",
+        "append",
+        "format"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | join left=e right=a where e.源地址 == a.源地址 [index == \"alarm_merge\" | fields 源地址, 告警名称 | head 100] | head 100"
+      ],
+      "notes": [
+        "子查询内部也只使用 alarm_merge、alarm、event* 三种 index。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    },
+    {
+      "name": "tail",
+      "entry_type": "command",
+      "summary": "返回最后 N 条结果。",
+      "syntax": "tail <N>",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "返回最后 N 条结果。"
+        },
+        {
+          "title": "语法",
+          "content": "tail <N>"
+        },
+        {
+          "title": "示例",
+          "content": "index == \"event*\" | where 发生时间 >= now(d-1d) and 发生时间 <= now() | sort 发生时间 | tail 20 | head 20"
+        },
+        {
+          "title": "注意",
+          "content": "通常需要先排序，否则“最后 N 条”的语义不稳定。"
+        },
+        {
+          "title": "相关命令",
+          "content": "head、sort"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "限制命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "注意",
+              "通常依赖排序后的结果语义"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "head",
+        "sort"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where 发生时间 >= now(d-1d) and 发生时间 <= now() | sort 发生时间 | tail 20 | head 20"
+      ],
+      "notes": [
+        "通常需要先排序，否则“最后 N 条”的语义不稳定。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    },
+    {
+      "name": "top",
+      "entry_type": "command",
+      "summary": "显示字段最常见的值；带 BY 时按分组字段分别计算常见值。",
+      "syntax": "top [<N>] [countfield=<field>] [percentfield=<field>] [showcount=<bool>] [showperc=<bool>] [limit=<int>] <field-list> [BY <field-list>]",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "top 返回字段最常见的值。若包含 `BY` 子句，则会在每个分组内分别计算最常见值。"
+        },
+        {
+          "title": "语法",
+          "content": "top [<N>] [countfield=<field>] [percentfield=<field>] [showcount=<bool>] [showperc=<bool>] [limit=<int>] <field-list> [BY <field-list>]"
+        },
+        {
+          "title": "用法",
+          "content": "不带 `BY` 时返回全局常见值；带 `BY` 时返回每组内的常见值。适合快速排行、热点字段分布和 Top-N 分析。"
+        },
+        {
+          "title": "示例",
+          "content": "`... | top 数据源`；`... | top 事件名称 BY 数据源`。"
+        },
+        {
+          "title": "注意",
+          "content": "`top N` 自带限制，因此不需要再补同层 `head`。"
+        },
+        {
+          "title": "相关命令",
+          "content": "stats、sort"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "聚合命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "优势",
+              "自带限制，适合排行查询"
+            ]
+          ]
+        },
+        {
+          "title": "可选参数",
+          "headers": [
+            "参数",
+            "说明",
+            "默认值"
+          ],
+          "rows": [
+            [
+              "`<N>`",
+              "返回结果数量。",
+              "命令默认值"
+            ],
+            [
+              "`countfield`",
+              "计数字段名。",
+              "`count`"
+            ],
+            [
+              "`percentfield`",
+              "百分比字段名。",
+              "`percent`"
+            ],
+            [
+              "`showcount`",
+              "是否输出计数字段。",
+              "`true`"
+            ],
+            [
+              "`showperc`",
+              "是否输出百分比字段。",
+              "`true`"
+            ],
+            [
+              "`limit`",
+              "StreamSummary 算法的 capacity，值越大越准确。",
+              "`1000`"
+            ],
+            [
+              "`BY <field-list>`",
+              "根据一个或多个字段分组后再求 Top。",
+              "无"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "stats",
+        "sort"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where 发生时间 >= now(d-7d) and 发生时间 <= now() | top 20 事件名称"
+      ],
+      "notes": [
+        "`top N` 自带限制，不需要再补同层 `head`。",
+        "排行查询优先使用 `top N` 骨架，而不是先 `stats` 再机械补 `head`。"
+      ],
+      "intent_tags": [
+        "ranking",
+        "top_n_select",
+        "derived_filter"
+      ],
+      "input_shape": "dataset",
+      "output_shape": "ranking_top_n",
+      "supports_subquery": true,
+      "usable_in_where_subquery": true,
+      "returns_filter_expression": false,
+      "preferred_for": [
+        "top_n",
+        "ranked_detail",
+        "top_n_select"
+      ],
+      "avoid_when": [],
+      "can_follow": [
+        "where",
+        "sort"
+      ],
+      "can_precede": [
+        "fields",
+        "format"
+      ],
+      "cost_rank": 15
+    },
+    {
+      "name": "where",
+      "entry_type": "command",
+      "summary": "使用 Painless 布尔表达式筛选结果，只保留返回 true 的记录。",
+      "syntax": "where <painless-boolean-expression>",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "where 使用完整的 Painless 布尔表达式筛选搜索结果，只返回表达式结果为 true 的记录。表达式可下推 ES 执行，但长线存储暂不支持下推。"
+        },
+        {
+          "title": "语法",
+          "content": "where <painless-boolean-expression>"
+        },
+        {
+          "title": "用法",
+          "content": "where 与 eval 使用同一套 Painless 语法。带引号的字符串按字面量处理，不带引号的字符串会被视为字段，因此可以做字段间比较、计算表达式以及 `try/catch` 异常处理。"
+        },
+        {
+          "title": "示例",
+          "content": "IP/子网：`... | where 源地址 == \"10.9.165.1\" or ip_in(目的地址, \"10.9.165.0/25\")`；计算：`... | where 结束时间 - 开始时间 > 60*1000`；异常捕获：`... | where try { return ipToLong(源地址) > ipToLong(\"192.168.0.1\"); } catch (Exception e) { return false; }`。"
+        },
+        {
+          "title": "注意",
+          "content": "在当前 skill 中，顶层业务过滤与时间条件统一进入 where。"
+        },
+        {
+          "title": "相关命令",
+          "content": "search、eval"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "过滤命令"
+            ],
+            [
+              "位置",
+              "顶层 canonical pipeline 中必须紧跟在 index 之后"
+            ],
+            [
+              "脚本语言",
+              "Painless"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "search",
+        "eval"
+      ],
+      "canonical_examples": [
+        "index == \"event*\" | where 源地址 == \"10.9.165.1\" or ip_in(目的地址, \"10.9.165.0/25\") | head 100"
+      ],
+      "notes": [
+        "如果存在过滤条件，顶层 where 必须紧跟在 index 段后。",
+        "未明确指定时间字段时，event 默认用 `发生时间`，alarm / alarm_merge 默认用 `开始时间`。"
+      ],
+      "intent_tags": [
+        "filter",
+        "subquery_filter",
+        "detail_filter"
+      ],
+      "input_shape": "dataset",
+      "output_shape": "dataset",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [
+        "index"
+      ],
+      "can_precede": [
+        "fields",
+        "sort",
+        "stats",
+        "top",
+        "join",
+        "append",
+        "head",
+        "format"
+      ],
+      "cost_rank": 5
+    },
+    {
+      "name": "xyseries",
+      "entry_type": "command",
+      "summary": "将结果集转换为聚合表格 / 交叉表形式，便于图表渲染和多序列展示。",
+      "syntax": "xyseries [xyseries-options] <x-field> <y-name-field> <y-data-fieldList>",
+      "named_sections": [
+        {
+          "title": "描述",
+          "content": "xyseries 会把结果集转换成适合图表或聚合表格消费的交叉表结构。"
+        },
+        {
+          "title": "语法",
+          "content": "xyseries [format=<pattern>] [grouped=<bool>] [sep=<separator>] [agg=<stats-agg-term>...] <x-field> <y-name-field> <y-data-fieldList>"
+        },
+        {
+          "title": "用法",
+          "content": "`<x-field>` 作为第一列；`<y-name-field>` 提供系列标签；`<y-data-fieldList>` 作为数据区域。`format` 优先于 `sep`，用于构造多系列输出字段名；`grouped=true` 时按正序输出；`agg=` 可直接指定一个或多个聚合函数作为 y 值来源。"
+        },
+        {
+          "title": "示例",
+          "content": "`index == \"alarm_merge\" | bucket span='1d' 开始时间 AS _time | stats sum(alarm_count) AS _sum, count(alarm_level) AS _count BY _time, 数据源 | xyseries _time 数据源 _sum,_count`"
+        },
+        {
+          "title": "注意",
+          "content": "通常放在 `bucket + stats` 之后，再交给 `chart` 渲染。"
+        },
+        {
+          "title": "相关命令",
+          "content": "stats、chart、bucket"
+        }
+      ],
+      "tables": [
+        {
+          "title": "属性",
+          "headers": [
+            "属性",
+            "说明"
+          ],
+          "rows": [
+            [
+              "类型",
+              "转换命令"
+            ],
+            [
+              "位置",
+              "管道任意位置"
+            ],
+            [
+              "输出",
+              "交叉表 / 聚合表格"
+            ]
+          ]
+        },
+        {
+          "title": "必要参数",
+          "headers": [
+            "参数",
+            "说明"
+          ],
+          "rows": [
+            [
+              "`<x-field>`",
+              "用作 x 轴或结果第一列的字段。"
+            ],
+            [
+              "`<y-name-field>`",
+              "用作系列标签或结果第一行表头的字段。"
+            ],
+            [
+              "`<y-data-fieldList>`",
+              "用作数据区域的一个或多个 y 轴字段。"
+            ]
+          ]
+        },
+        {
+          "title": "可选参数",
+          "headers": [
+            "参数",
+            "说明"
+          ],
+          "rows": [
+            [
+              "`format`",
+              "多个数据系列由 BY 字段分割时，用于构造输出字段名称；支持 `$AGG$`、`$VALUE$` 等参数化占位。"
+            ],
+            [
+              "`grouped`",
+              "是否按正序输出结果对；默认 `false`。"
+            ],
+            [
+              "`sep`",
+              "当多个数据系列由 BY 字段分隔时，用于拼接输出字段名称；若同时给出 `format`，以 `format` 为准。"
+            ],
+            [
+              "`agg`",
+              "指定一个或多个聚合函数，聚合后的字段值作为 y 轴值。"
+            ]
+          ]
+        }
+      ],
+      "related_commands": [
+        "stats",
+        "chart",
+        "bucket"
+      ],
+      "canonical_examples": [
+        "index == \"alarm_merge\" | where 开始时间 >= now(d-7d) and 开始时间 <= now() | bucket span='1d' 开始时间 AS _time | stats sum(alarm_count) AS _sum BY _time, 数据源 | xyseries _time 数据源 _sum"
+      ],
+      "notes": [
+        "`format` 和 `sep` 同时出现时，以 `format` 为准。",
+        "通常位于 `bucket + stats` 之后。"
+      ],
+      "intent_tags": [],
+      "input_shape": "pipeline",
+      "output_shape": "pipeline",
+      "supports_subquery": false,
+      "usable_in_where_subquery": false,
+      "returns_filter_expression": false,
+      "preferred_for": [],
+      "avoid_when": [],
+      "can_follow": [],
+      "can_precede": [],
+      "cost_rank": 50
+    }
+  ],
+  "expression_operators": [
+    {
+      "symbol": "==",
+      "summary": "唯一允许的等值比较运算符。",
+      "variants": [
+        "=="
+      ]
+    },
+    {
+      "symbol": "!=",
+      "summary": "不等于比较。",
+      "variants": [
+        "!="
+      ]
+    },
+    {
+      "symbol": ">",
+      "summary": "大于比较。",
+      "variants": [
+        ">"
+      ]
+    },
+    {
+      "symbol": ">=",
+      "summary": "大于等于比较。",
+      "variants": [
+        ">="
+      ]
+    },
+    {
+      "symbol": "<",
+      "summary": "小于比较。",
+      "variants": [
+        "<"
+      ]
+    },
+    {
+      "symbol": "<=",
+      "summary": "小于等于比较。",
+      "variants": [
+        "<="
+      ]
+    },
+    {
+      "symbol": "like",
+      "summary": "字符串包含或模糊匹配。",
+      "variants": [
+        "like"
+      ]
+    },
+    {
+      "symbol": "rlike",
+      "summary": "正则匹配，只在用户明确要求正则时使用。",
+      "variants": [
+        "rlike"
+      ]
+    }
+  ],
+  "predicate_operators": {
+    "==": {
+      "category": "comparison",
+      "render_kind": "infix_field_value",
+      "rhs_kind": "literal",
+      "lhs_requires_array": false,
+      "rhs_must_resolve_field": false,
+      "lhs_allowed_types": [
+        "ip",
+        "number",
+        "string",
+        "time",
+        "map"
+      ],
+      "rhs_allowed_types": [
+        "ip",
+        "number",
+        "string",
+        "time",
+        "map"
+      ],
+      "supports_scalar_shorthand": false
+    },
+    "!=": {
+      "category": "comparison",
+      "render_kind": "infix_field_value",
+      "rhs_kind": "literal",
+      "lhs_requires_array": false,
+      "rhs_must_resolve_field": false,
+      "lhs_allowed_types": [
+        "ip",
+        "number",
+        "string",
+        "time",
+        "map"
+      ],
+      "rhs_allowed_types": [
+        "ip",
+        "number",
+        "string",
+        "time",
+        "map"
+      ],
+      "supports_scalar_shorthand": false
+    },
+    ">": {
+      "category": "comparison",
+      "render_kind": "infix_field_value",
+      "rhs_kind": "literal",
+      "lhs_requires_array": false,
+      "rhs_must_resolve_field": false,
+      "lhs_allowed_types": [
+        "number",
+        "time"
+      ],
+      "rhs_allowed_types": [
+        "number",
+        "time"
+      ],
+      "supports_scalar_shorthand": false
+    },
+    ">=": {
+      "category": "comparison",
+      "render_kind": "infix_field_value",
+      "rhs_kind": "literal",
+      "lhs_requires_array": false,
+      "rhs_must_resolve_field": false,
+      "lhs_allowed_types": [
+        "number",
+        "time"
+      ],
+      "rhs_allowed_types": [
+        "number",
+        "time"
+      ],
+      "supports_scalar_shorthand": false
+    },
+    "<": {
+      "category": "comparison",
+      "render_kind": "infix_field_value",
+      "rhs_kind": "literal",
+      "lhs_requires_array": false,
+      "rhs_must_resolve_field": false,
+      "lhs_allowed_types": [
+        "number",
+        "time"
+      ],
+      "rhs_allowed_types": [
+        "number",
+        "time"
+      ],
+      "supports_scalar_shorthand": false
+    },
+    "<=": {
+      "category": "comparison",
+      "render_kind": "infix_field_value",
+      "rhs_kind": "literal",
+      "lhs_requires_array": false,
+      "rhs_must_resolve_field": false,
+      "lhs_allowed_types": [
+        "number",
+        "time"
+      ],
+      "rhs_allowed_types": [
+        "number",
+        "time"
+      ],
+      "supports_scalar_shorthand": false
+    },
+    "like": {
+      "category": "comparison",
+      "render_kind": "infix_field_value",
+      "rhs_kind": "literal",
+      "rhs_literal_format": "default",
+      "lhs_requires_array": false,
+      "rhs_must_resolve_field": false,
+      "lhs_allowed_types": [
+        "string",
+        "ip",
+        "time"
+      ],
+      "rhs_allowed_types": [
+        "string"
+      ],
+      "supports_scalar_shorthand": false
+    },
+    "rlike": {
+      "category": "comparison",
+      "render_kind": "infix_field_value",
+      "rhs_kind": "literal",
+      "rhs_literal_format": "regex_literal",
+      "lhs_requires_array": false,
+      "rhs_must_resolve_field": false,
+      "lhs_allowed_types": [
+        "string",
+        "ip",
+        "time"
+      ],
+      "rhs_allowed_types": [
+        "string"
+      ],
+      "supports_scalar_shorthand": false
+    },
+    "belong": {
+      "category": "field_membership",
+      "render_kind": "infix_field_field",
+      "rhs_kind": "field",
+      "lhs_requires_array": false,
+      "rhs_must_resolve_field": true,
+      "rhs_requires_belong_rhs": true,
+      "lhs_forbids_belong_rhs": true,
+      "lhs_allowed_types": [
+        "ip",
+        "string",
+        "number"
+      ],
+      "rhs_allowed_types": [
+        "ip",
+        "string",
+        "number"
+      ],
+      "supports_scalar_shorthand": false
+    },
+    "any_match": {
+      "category": "array_match",
+      "render_kind": "function_field_list",
+      "rhs_kind": "literal_list",
+      "lhs_requires_array": false,
+      "rhs_must_resolve_field": false,
+      "rhs_requires_belong_rhs": false,
+      "lhs_forbids_belong_rhs": false,
+      "lhs_allowed_types": [
+        "ip",
+        "number",
+        "string",
+        "time"
+      ],
+      "rhs_allowed_types": [
+        "ip",
+        "number",
+        "string",
+        "time"
+      ],
+      "supports_scalar_shorthand": true
+    }
+  },
+  "deprecated_predicate_functions": {
+    "_belong": "belong"
+  },
+  "boolean_keywords": [
+    "and",
+    "or",
+    "not"
+  ],
+  "clause_keywords": [
+    "AS",
+    "BY"
+  ],
+  "stats_functions": [
+    "avg",
+    "count",
+    "dc",
+    "estdc",
+    "max",
+    "min",
+    "range",
+    "sum"
+  ],
+  "stats_function_capabilities": {
+    "count": {
+      "requires_field": false,
+      "default_field": "ID",
+      "allow_star": false,
+      "default_alias": "数量"
+    },
+    "avg": {
+      "requires_field": true,
+      "default_field": null,
+      "allow_star": false,
+      "default_alias": "平均值"
+    },
+    "dc": {
+      "requires_field": true,
+      "default_field": null,
+      "allow_star": false,
+      "default_alias": "去重数量"
+    },
+    "estdc": {
+      "requires_field": true,
+      "default_field": null,
+      "allow_star": false,
+      "default_alias": "估算去重数量"
+    },
+    "max": {
+      "requires_field": true,
+      "default_field": null,
+      "allow_star": false,
+      "default_alias": "最大值"
+    },
+    "min": {
+      "requires_field": true,
+      "default_field": null,
+      "allow_star": false,
+      "default_alias": "最小值"
+    },
+    "range": {
+      "requires_field": true,
+      "default_field": null,
+      "allow_star": false,
+      "default_alias": "范围"
+    },
+    "sum": {
+      "requires_field": true,
+      "default_field": null,
+      "allow_star": false,
+      "default_alias": "求和"
+    }
+  },
+  "chart_panel_types": [
+    "stat",
+    "bar",
+    "groupbar",
+    "stackpecentbar",
+    "line",
+    "multiline",
+    "graph",
+    "groupgraph",
+    "stackgraph",
+    "stackpecentgraph",
+    "area",
+    "stackarea",
+    "biaxial",
+    "sector",
+    "pie",
+    "rose",
+    "word",
+    "Scatter",
+    "heat",
+    "table",
+    "aggtable"
+  ]
+}

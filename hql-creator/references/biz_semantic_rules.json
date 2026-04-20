@@ -1,0 +1,243 @@
+{
+  "notes": {
+    "match_any_usage": "`match_any` 仅作为参考语料保留；V1 公共入口只消费 `public_name` 与 `public_aliases`，engine 编译阶段仍只消费标准 rule_id / target_id。"
+  },
+  "macros": [
+    {
+      "rule_id": "manual_handled_alarm_merge",
+      "public_name": "被处置过",
+      "public_aliases": [
+        "人工处置过",
+        "已被处置过",
+        "人工处置"
+      ],
+      "description": "“人工处置过 / 被处置过”在威胁告警场景下表示已经进入过人工处置流程，默认排除待处置记录。",
+      "match_any": [
+        "人工处置过",
+        "被人工处置过",
+        "已被处置过",
+        "被处置过",
+        "人工处置"
+      ],
+      "source_scopes": [
+        "alarm_merge"
+      ],
+      "semantic_tag": "manual_handled",
+      "resolution_mode": "authoritative",
+      "priority": 100,
+      "all_of": [
+        {
+          "field": "处置状态",
+          "field_key": "handle_status",
+          "operator": "!=",
+          "value": "待处置"
+        }
+      ]
+    },
+    {
+      "rule_id": "handled_completed_alarm_merge",
+      "public_name": "已处置",
+      "public_aliases": [
+        "处置完成"
+      ],
+      "description": "“处置完成 / 已处置”表示人工处置状态已经完成，不应被泛化成“非待处置”。",
+      "match_any": [
+        "处置完成",
+        "已处置"
+      ],
+      "source_scopes": [
+        "alarm_merge"
+      ],
+      "semantic_tag": "handled_completed",
+      "resolution_mode": "authoritative",
+      "priority": 110,
+      "all_of": [
+        {
+          "field": "处置状态",
+          "field_key": "handle_status",
+          "operator": "==",
+          "value": "处置完成"
+        }
+      ]
+    },
+    {
+      "rule_id": "llm_judged_alarm_merge",
+      "public_name": "被模型研判过",
+      "public_aliases": [
+        "被研判过",
+        "被大模型研判过",
+        "模型研判过"
+      ],
+      "description": "“被研判过 / 被大模型研判过”在当前业务里明确指向安全大模型研判字段非空，不能退化成研判结果字段。",
+      "match_any": [
+        "被研判过",
+        "被大模型研判过",
+        "大模型研判过",
+        "被模型研判过",
+        "模型研判过"
+      ],
+      "source_scopes": [
+        "alarm_merge"
+      ],
+      "semantic_tag": "llm_judged",
+      "resolution_mode": "authoritative",
+      "priority": 120,
+      "all_of": [
+        {
+          "field": "安全大模型研判",
+          "field_key": "gpt_result",
+          "operator": "!=",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "rule_id": "process_alarm_alarm_merge",
+      "public_name": "进程类告警",
+      "public_aliases": [
+        "终端进程类告警",
+        "进程类威胁告警"
+      ],
+      "description": "“进程类告警 / 终端进程类告警”表示告警中至少存在一个进程或父进程上下文字段。",
+      "match_any": [
+        "进程类告警",
+        "进程类威胁告警",
+        "进程类合并告警",
+        "终端进程类威胁告警",
+        "终端进程合并胁告警",
+        "终端进程类告警"
+      ],
+      "source_scopes": [
+        "alarm_merge"
+      ],
+      "semantic_tag": "process_alarm",
+      "resolution_mode": "authoritative",
+      "priority": 130,
+      "any_of": [
+        {
+          "field": "父进程命令行",
+          "field_key": "p_proc_command",
+          "operator": "!=",
+          "value": ""
+        },
+        {
+          "field": "进程命令行",
+          "field_key": "proc_command",
+          "operator": "!=",
+          "value": ""
+        },
+        {
+          "field": "父进程路径",
+          "field_key": "p_proc_path",
+          "operator": "!=",
+          "value": ""
+        },
+        {
+          "field": "进程路径",
+          "field_key": "proc_path",
+          "operator": "!=",
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "targets": [
+    {
+      "target_id": "llm_judgement",
+      "public_name": "模型研判结果",
+      "public_aliases": [
+        "模型研判",
+        "大模型研判结果",
+        "安全大模型研判结果",
+        "安全大模型研判"
+      ],
+      "description": "安全大模型研判结果。",
+      "match_any": [
+        "模型研判",
+        "模型研判结果",
+        "大模型研判",
+        "大模型研判结果",
+        "安全大模型研判",
+        "安全大模型研判结果"
+      ],
+      "source_scopes": [
+        "alarm_merge"
+      ],
+      "field": "安全大模型研判",
+      "field_key": "gpt_result",
+      "semantic_tag": "llm_judgement",
+      "allowed_values": [
+        "信息不足",
+        "攻击失败",
+        "攻击成功",
+        "未知",
+        "疑似攻击",
+        "高风险钓鱼邮件",
+        "误报",
+        "非攻击风险"
+      ],
+      "value_aliases": {
+        "成功": "攻击成功",
+        "失败": "攻击失败"
+      }
+    },
+    {
+      "target_id": "manual_judgement",
+      "public_name": "人工研判结果",
+      "public_aliases": [
+        "人工研判",
+        "研判结果"
+      ],
+      "description": "人工研判结果。",
+      "match_any": [
+        "人工研判",
+        "研判结果"
+      ],
+      "source_scopes": [
+        "alarm_merge"
+      ],
+      "field": "研判结果",
+      "field_key": "confirm_status",
+      "semantic_tag": "manual_judgement",
+      "allowed_values": [
+        "未研判",
+        "攻击成功",
+        "攻击失败",
+        "误报",
+        "未知"
+      ],
+      "value_aliases": {
+        "成功": "攻击成功",
+        "失败": "攻击失败"
+      }
+    },
+    {
+      "target_id": "final_judgement",
+      "public_name": "综合研判结果",
+      "public_aliases": [
+        "综合研判"
+      ],
+      "description": "综合研判结果。",
+      "match_any": [
+        "综合研判",
+        "综合研判结果"
+      ],
+      "source_scopes": [
+        "alarm_merge"
+      ],
+      "field": "综合研判结果",
+      "field_key": "final_attack_result",
+      "semantic_tag": "final_judgement",
+      "allowed_values": [
+        "攻击失败",
+        "攻击成功",
+        "未知",
+        "误报"
+      ],
+      "value_aliases": {
+        "成功": "攻击成功",
+        "失败": "攻击失败"
+      }
+    }
+  ]
+}

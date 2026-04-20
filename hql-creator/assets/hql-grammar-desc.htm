@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)https://10.228.93.12/ZULXYAIK5678/system/help/HQLite+ -->
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body x-ms-format-detection="none" style="-webkit-print-color-adjust: exact" data-v-app="">
+<div class="root-app">
+    <div class="qihoo-container hexagon-root-app nav-expand">
+        <div data-v-422e796c="" class="header">
+            <div data-v-422e796c="" class="logo"></div>
+            <div data-v-422e796c="" id="dynamic-header-content" class="header-content">
+                <div class="application system" style="margin-left: 0px;">
+                    <div data-v-1ed6a991="" class="micro-app-container" md="HQLite+"><!--v-if-->
+                        <div data-v-1ed6a991="" class="micro-qiankun">
+                            <div id="__qiankun_microapp_wrapper_for_hexagon__" data-name="hexagon"
+                                 data-version="2.10.16"
+                                 data-sandbox-cfg="{}">
+                                <!--   script app/hexagon/js/hexagon.app.0fd9fa95cc.min.js replaced by import-html-entry -->
+                                <div data-v-app="">
+                                    <div class="root-app">
+                                        <div class="qihoo-container hexagon-root-app nav-expand inject"><!--v-if-->
+                                            <!--v-if-->
+                                            <div class="application system oversize-trend-rootEl-fullscreen"
+                                                 style="margin-left: 0px;">
+                                                <div data-v-d67b379c=""
+                                                     class="hs-md-render-content-container system-help-md">
+                                                    <!--v-if-->
+                                                    <div class="hs-md-render-content-md-container" style="width: 0px;">
+                                                        <h1
+                                                                id="简介" tabindex="-1">简介</h1>
+                                                        <h1 id="时间" tabindex="-1">时间</h1>
+                                                        <ol>
+                                                            <li>比较表达式中，时间字段可与如下格式进行比较：</li>
+                                                        </ol>
+                                                        <pre><code>yyyy-MM-dd HH:mm:ss.SSS
+yyyy-MM-dd HH:mm:ss
+now()或now(d-1d)函数
+时间戳
+</code></pre>
+                                                        <ol start="2">
+                                                            <li>时间选择器：</li>
+                                                        </ol>
+                                                        <p>针对index为<code>event</code> <code>alarm</code>
+                                                            <code>asset</code>
+                                                            <code>incident</code> <code>vulnerability_his</code> <code>security_assess_based_score</code>
+                                                            <code>soar_case</code>时自动添加到search条件中</p>
+                                                        <h1 id="子查询" tabindex="-1">子查询</h1>
+                                                        <p>
+                                                            子查询执行的结果将作为外部hqlite的参数，常用于如下两个场景：</p>
+                                                        <p>Ø使用子查询的结果作为主查询的搜索过滤条件；</p>
+                                                        <p>
+                                                            Ø执行一个独立的搜索，将子查询的结果append或者join到主查询的结果中。</p>
+                                                        <p>子查询被包含在双方括号[ ]</p>
+                                                        <h1 id="painless" tabindex="-1">Painless</h1>
+                                                        <p>
+                                                            高性能、安全、可选类型、丰富语法的painless主要应用在where、eval命令上，即可下推到下层存储也可以本地运行</p>
+                                                        <p>表达式、操作符、字面量等语法详细说明可以阅读<a
+                                                                href="https://www.elastic.co/guide/en/elasticsearch/painless/current/painless-lang-spec.html">Painless
+                                                            LanguageSpecification</a></p>
+                                                        <h2 id="部分修改" tabindex="-1">部分修改</h2>
+                                                        <ol>
+                                                            <li>删除&amp; ^ |运算符</li>
+                                                            <li>布尔运算：and等同&amp;&amp; or等同|| not等同!</li>
+                                                            <li>新增布尔操作符
+                                                                <ul>
+                                                                    <li>xxx belong 信息组，内部转成_belong(信息组base64,
+                                                                        xxx)
+                                                                    </li>
+                                                                    <li>xxx like "aaa"，内部转成str_like(xxx, "aaa")</li>
+                                                                    <li>xxx rlike /正则/，内部转成xxx ==~ /正则/</li>
+                                                                    <li>exist xxx，内部转成xxx != null</li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                中文标识符，根据属性字段转成对应英文；日志如有中文字段，可以使用doc['中文']
+                                                            </li>
+                                                            <li>IP字面量，内部转成字符串</li>
+                                                        </ol>
+                                                        <h2 id="白名单函数" tabindex="-1">白名单函数</h2>
+                                                        <ul>
+                                                            <li>内置常见函数
+                                                                <ul>
+                                                                    <li>java.lang.txt</li>
+                                                                    <li>java.math.txt</li>
+                                                                    <li>java.time.chrono.txt</li>
+                                                                    <li>java.time.format.txt</li>
+                                                                    <li>java.time.temporal.txt</li>
+                                                                    <li>java.time.txt</li>
+                                                                    <li>java.time.zone.txt</li>
+                                                                    <li>java.util.function.txt</li>
+                                                                    <li>java.util.regex.txt</li>
+                                                                    <li>java.util.stream.txt</li>
+                                                                    <li>java.util.txt</li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>部分扩展函数
+                                                                <ul>
+                                                                    <li>now()</li>
+                                                                    <li>now(String)</li>
+                                                                    <li>ip_in(String, String)</li>
+                                                                    <li>ipToLong(String)</li>
+                                                                    <li>longToIp(String)</li>
+                                                                    <li>_belong(String, Object)</li>
+                                                                    <li>any_match(def, List)</li>
+                                                                    <li>str_like(def, String)</li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                        <h1 id="统计函数" tabindex="-1">统计函数</h1>
+                                                        <table>
+                                                            <thead>
+                                                            <tr>
+                                                                <th>聚合函数</th>
+                                                                <th>描述</th>
+                                                                <th>函数类别</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>avg(X)</td>
+                                                                <td>返回字段 X 中的值的平均值。</td>
+                                                                <td>聚合函数</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>count(X)</td>
+                                                                <td>
+                                                                    返回包含任意值(非空)的您指定的字段的出现次数。例如:count(id)。
+                                                                </td>
+                                                                <td>聚合函数</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>dc(X)</td>
+                                                                <td>返回字段 X 中非重复值的计数，目前也已estdc方案实现。
+                                                                </td>
+                                                                <td>聚合函数</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>estdc(X)</td>
+                                                                <td>返回字段 X 中非重复值的估计计数。</td>
+                                                                <td>聚合函数</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>max(X)</td>
+                                                                <td>返回字段 X 的最大值。</td>
+                                                                <td>聚合函数</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>min(X)</td>
+                                                                <td>返回字段 X 的最小值。</td>
+                                                                <td>聚合函数</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>range(X)</td>
+                                                                <td>返回字段 X 的最大值与最小值之差(前提是 X 的值为数
+                                                                    字)。
+                                                                </td>
+                                                                <td>聚合函数</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>sum(X)</td>
+                                                                <td>返回字段 X 的值的总和。</td>
+                                                                <td>聚合函数</td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <h1 id="组合下推" tabindex="-1">组合下推</h1>
+                                                        <h1 id="搜索命令" tabindex="-1">搜索命令</h1>
+                                                        <h2 id="search" tabindex="-1">search</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>作为语句的起始命令，用于构建下推过滤表达式</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>[search] </code></p>
+                                                                <p><em><strong>可选参数</strong></em></p>
+                                                                <p><code>[search]</code> 命令可以省略</p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p>****
+                                                                    只处理布尔表达式，比较表达式(左侧字段，右侧常量值或字段)，特殊字段index值为索引类型；不支持函数调用。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                                <p>关键字：<code>index == 'event' and 原始日志 ==
+                                                                    'error'</code>
+                                                                </p>
+                                                                <p>布尔运算符：<code>index == 'event' and not (原始日志
+                                                                    ==
+                                                                    'error' or 原始日志 == 'fail')</code></p>
+                                                                <p>通配符：<code>index == 'event' and 事件名称 rlike
+                                                                    /.*web.*/</code></p>
+                                                                <p>字段值：<code>index == 'event' and status == 404,
+                                                                    index ==
+                                                                    'event' and status&amp;gt;200</code></p>
+                                                                <p>子查询：<code>index == 'event' and [index=='alarm' |
+                                                                    where
+                                                                    id
+                                                                    == "1553156723561363552" | fields event_id | localop
+                                                                    |
+                                                                    eval
+                                                                    id=doc.remove("event_id")]</code></p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <ol>
+                                                                    <li>字段-值对匹配</li>
+                                                                </ol>
+                                                                <p>此示例为目的地址的特定值的字段-值对匹配。</p>
+                                                                <p><code>目的地址=="10.9.165.8"</code></p>
+                                                                <ol start="2">
+                                                                    <li>使用布尔和比较运算符</li>
+                                                                </ol>
+                                                                <p>
+                                                                    此示例将演示布尔运算符和比较运算符进行字段-值对匹配。</p>
+                                                                <p><code>主机名称 == "5CG0341W2F" and data_source !=
+                                                                    '360NDR'</code></p>
+                                                                <ol start="3">
+                                                                    <li>使通配通配符</li>
+                                                                </ol>
+                                                                <p>包含web的事件名称</p>
+                                                                <p><code>事件名称 rlike /.*web.*/</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="where" tabindex="-1">where</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>
+                                                                    where命令使⽤完成Painless表达式筛选搜索结果。这些Painless表达式必须是布尔值表达式，返回true
+                                                                    或
+                                                                    false。where命令仅返回Painless表达式返回true的结果。</p>
+                                                                <p>
+                                                                    <strong>Painless表达式可以下推ES执行，但长线存储暂不支持。</strong>
+                                                                </p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>where </code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：<a
+                                                                                href="https://www.elastic.co/guide/en/elasticsearch/painless/current/painless-lang-spec.html">Painless
+                                                                            LanguageSpecification</a></em></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p>
+                                                                            <em>描述：代表⽬标字段值的值、变量、运算符以及函数的组合，doc字段代表当前记录。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                                <p>where 命令使⽤的表达式语法与
+                                                                    eval命令相同。两个命令都将带引号的字符串解释为⽂字。如果字符串不带引号，则将其视为字段名称，您可以使⽤where命令来⽐较两个不同的字段。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <ol>
+                                                                    <li>使⽤ where 命令匹配 IP 地址或⼦⽹</li>
+                                                                </ol>
+                                                                <p>返回与 IP 匹配或在指定⼦⽹中的事件。</p>
+                                                                <p><code>... | where 源地址 == "10.9.165.1" or
+                                                                    ip_in(目的地址,
+                                                                    "10.9.165.0/25")</code></p>
+                                                                <ol start="2">
+                                                                    <li>使⽤ where 命令指定计算</li>
+                                                                </ol>
+                                                                <p>返回事件执行时间超过60秒的事件。</p>
+                                                                <p><code>... | where 结束时间 - 开始时间 &amp;gt;
+                                                                    60*1000</code>
+                                                                </p>
+                                                                <ol start="3">
+                                                                    <li>异常捕获</li>
+                                                                </ol>
+                                                                <pre><code>... | where try {
+  return ipToLong(源地址) &amp;gt; ipToLong('192.168.0.1');
+} catch (Exception e) {
+  return false;
+}
+</code></pre>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="eval" tabindex="-1">eval</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>
+                                                                    eval命令painless表达式并将结果值放⼊⽬标字段中，若该⽬标字段与现有字段名称匹配，则会被覆盖，目标返回当前doc；或者返回新的Map对象。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>eval </code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：<a
+                                                                                href="https://www.elastic.co/guide/en/elasticsearch/painless/current/painless-lang-spec.html">Painless
+                                                                            Language Specification</a></em></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p>
+                                                                            <em>描述：代表⽬标字段值的值、变量、运算符以及函数的组合，doc字段代表当前记录。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em><strong>常规：</strong></em>
+                                                                            eval命令要求指定⼀个字段名，⽤于接受要计算的表达式的结果。
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em><strong>特殊：</strong></em>
+                                                                            表达式中使用到字段可能不存在，需要进行非null判断；或者<code>try
+                                                                                {} catch(Exception e) {}</code>进行防守
+                                                                        </p>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <ol>
+                                                                    <li>创建包含计算结果的新字段</li>
+                                                                </ol>
+                                                                <p><code>... | eval def _time = 接收时间 - 发生时间; def
+                                                                    low
+                                                                    =
+                                                                    事件名称.toLowerCase();long _ip =
+                                                                    ipToLong(源地址)</code>
+                                                                </p>
+                                                                <ol start="2">
+                                                                    <li>创建新的返回对象</li>
+                                                                </ol>
+                                                                <pre><code>... | eval
+def map = [:];
+map['时间字段'] = 发生时间;
+if (exist 源地址) {
+  map.ip = 源地址
+}
+return map;
+</code></pre>
+                                                                <ol start="3">
+                                                                    <li>异常捕获</li>
+                                                                </ol>
+                                                                <pre><code>... | eval try {
+  def _time = 接收时间 - 发生时间;
+  def low = 事件名称.toLowerCase();
+  long _ip = ipToLong(源地址);
+} catch (Exception e) {
+  return doc;
+}
+</code></pre>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="bucket" tabindex="-1">bucket</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>通过对 field 值桶运算产生新的字段放到该事件中。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>bucket [...] [AS ]</code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p><strong>field</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> ``</li>
+                                                                    <li><em>描述：指定⼀个字段名称。</em></li>
+                                                                </ul>
+                                                                <p><em><strong>可选参数</strong></em></p>
+                                                                <p><strong>bucket-options</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>span | minspan | bins |
+                                                                        start-end</code></li>
+                                                                    <li><em>描述：分桶选项</em></li>
+                                                                </ul>
+                                                                <p><em>span</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>span = '' | ''</code></li>
+                                                                    <li><em>描述：基于时间间隔分桶或者数字间隔分桶</em>
+                                                                        <ul>
+                                                                            <li>为格式的字符串，ms-毫秒 s-秒 m-分 h-时
+                                                                                d-天
+                                                                                <ul>
+                                                                                    <li>分桶算法：<code>Math.floor(value
+                                                                                        /
+                                                                                        interval) * interval</code></li>
+                                                                                </ul>
+                                                                            </li>
+                                                                            <li>为整形数字字符串
+                                                                                <ul>
+                                                                                    <li>分桶算法：<code>Math.floor((value
+                                                                                        -
+                                                                                        0) /
+                                                                                        interval) * interval + 0</code>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><em>minspan | bins</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>minspan = '' bins = </code>
+                                                                    </li>
+                                                                    <li><em>描述：基于最小时间间隔和最大分桶数，再根据时间选择器起始结束时间（或者start-end时间戳参数），自动产生最佳时间间隔</em>
+                                                                    </li>
+                                                                    <li><em>默认值：bins为15</em></li>
+                                                                </ul>
+                                                                <p><em>start-end</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>start= | end=</code></li>
+                                                                    <li>
+                                                                        <em>描述：将数字型根据大于等于start和小于end的事件产生桶值为start的新字段</em>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><strong>newfield</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>ID</code></li>
+                                                                    <li><em>描述：桶字段名</em></li>
+                                                                    <li><em>默认值：<code>__bucket</code></em></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                                <p>为每笔事件产生一个分桶字段</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p>⽰例1：返回每5分钟跨度内事件总数。</p>
+                                                                <p><code>... | bucket span='5m' occur_time AS _time |
+                                                                    stats
+                                                                    count(id) BY _time</code></p>
+                                                                <p>
+                                                                    ⽰例2：最近12小时(时间选择器)，产生最小间隔1分钟切最多50个桶，每个桶里事件总数</p>
+                                                                <p><code>... | bucket minspan='1m' bins=50 occur_time |
+                                                                    stats
+                                                                    count(id) BY _occur_time_bucket</code></p>
+                                                                <p>⽰例3：将源端口根据&gt;=0且&lt;100和&gt;=100且&lt;200产生桶值，其余不符合的事件不会产生桶值</p>
+                                                                <p><code>... | bucket start=0 end=100 源端口 AS _range |
+                                                                    bucket
+                                                                    start=100 end=200 源端口 AS _range | ...</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="stats" tabindex="-1">stats</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>计算结果集的聚合统计，如平均数、计数和总和。类似于
+                                                                    SQL聚合。如果stats命令在没有BY⼦句的情况下使⽤，将只返回⼀⾏，也就是整个进来的结果集的聚合。如果使⽤了BY字段，将为BY字段中指定的每个唯⼀值返回⼀⾏。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>stats (stats-function(field) [AS field])... [BY
+                                                                    field-list]</code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p><strong>stats-function</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>()</code></li>
+                                                                    <li><em>描述：<a
+                                                                            href="https://10.228.93.12/ZULXYAIK5678/system/help/HQLite+#%E7%BB%9F%E8%AE%A1%E5%87%BD%E6%95%B0">统计聚合函数</a>。</em>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><em><strong>可选参数</strong></em></p>
+                                                                <p><strong>by-clause</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>BY </code></li>
+                                                                    <li><em>描述：根据一个或多个字段进行分组。</em></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                                <p>统计函数中，如统计所有事件，字段为id</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p>1.统计事件总数</p>
+                                                                <p><code>... | stats count(id)</code></p>
+                                                                <p>2.统计每个事件名称里的事件总数和源端口最大值</p>
+                                                                <p><code>... | stats count(id) AS _count, max(源端口) BY
+                                                                    数据源,事件名称</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="sort" tabindex="-1">sort</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>sort 命令按指定字段对所有结果进⾏排序。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>sort ...</code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>( - | + )? , ( - | + )?
+                                                                        ...</code>
+                                                                    </li>
+                                                                    <li><em>描述：排序所依据的字段的列表及其排序顺序。⽤减号
+                                                                        (-)表⽰降序，加号 ( + ) 表⽰升序。</em></li>
+                                                                    <li><em>默认值：升序</em></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                                <p>排序算法:</p>
+                                                                <ol>
+                                                                    <li>
+                                                                        两值等同，或都为null时，如有下个字段排序，进行下个字段排序
+                                                                    </li>
+                                                                    <li>非null值&gt;null值</li>
+                                                                    <li>两值都为数字时，按数字比较</li>
+                                                                    <li>两值都为字符串时，按字典比较</li>
+                                                                    <li>一值为数字，另一直为字符串，字符串&gt;数字</li>
+                                                                    <li>其余类型保持顺序</li>
+                                                                </ol>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p>先按 "_time" 字段以升序顺序对结果进⾏排序，再按
+                                                                    "host"值以降序顺序排序。</p>
+                                                                <p><code>... | sort _time, -host</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="join" tabindex="-1">join</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>使⽤ join
+                                                                    命令合并⼦搜索和主搜索的结果。多个join可以嵌套或串联在一起，最终生成一个宽表结果集。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>join [join-options]... left= right= where .=.
+                                                                    [AND
+                                                                    .=.]... </code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p><strong>subsearch</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>"[" subsearch "]"</code>
+                                                                    </li>
+                                                                    <li>
+                                                                        <em>描述：用于构建Build表的子查询，优先于左侧查询启动；注意内存限制</em>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><strong>left</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>left=</code></li>
+                                                                    <li>
+                                                                        <em>描述：为左侧查询起用的别名，以避免命名冲突。</em>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><strong>right</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>right=</code></li>
+                                                                    <li>
+                                                                        <em>描述：为右子查询起用的别名，以避免命名冲突。</em>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><strong>where</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>.=. [ AND .=.]...</code>
+                                                                    </li>
+                                                                    <li><em>描述：要join的左侧查询结果和右侧查询中结果的字段名称。必须指定别名和字段名称。例如：L.host=R.user。</em>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><em><strong>可选参数</strong></em></p>
+                                                                <p><strong>join-options</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>type=('inner' | 'left') |
+                                                                        overwrite= | max=</code></li>
+                                                                    <li><em>描述：join 命令的选项。</em></li>
+                                                                </ul>
+                                                                <p><em>type</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>type='inner' |
+                                                                        'left'</code>
+                                                                    </li>
+                                                                    <li><em>描述：执⾏的连接类型。inner连接与
+                                                                        left连接的差别在于：。inner连接的结果不包含来⾃在⼦搜索中没有匹配项的事件；left连接的结果包括左侧查询中的所有事件。</em>
+                                                                    </li>
+                                                                    <li><em>默认值：inner</em></li>
+                                                                </ul>
+                                                                <p><em>overwrite</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>overwrite=</code></li>
+                                                                    <li>
+                                                                        <em>描述：来⾃右测⼦结果的字段是否覆盖来⾃左侧结果的字段（如果两者字段名相同）。</em>
+                                                                    </li>
+                                                                    <li><em>默认值：true</em></li>
+                                                                </ul>
+                                                                <p><em>max</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>max=</code></li>
+                                                                    <li>
+                                                                        <em>描述：指定每个左侧主搜索结果可以连接的最⼤右侧⼦搜索结果数。若设置为max=0，则⽆限制。</em>
+                                                                    </li>
+                                                                    <li><em>默认值：0</em></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                                <p>
+                                                                    要返回⼀对多、多对⼀或多对多关系的匹配。max=1，意味着⼦搜索只返回⼦搜索中的⾸个搜索。将值设置为更⾼的数或设置为0（即不受限制），将返回⼦搜索的多值结果。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p><code>index == 'event' | join max=1 left=l right=r
+                                                                    where
+                                                                    l.目的地址=r.ip_address [index == 'asset*' ]</code>
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="fields" tabindex="-1">fields</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>根据字段列表的条件在搜索结果中保留或移除字段。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>fields [+|-] </code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>ID,ID,...</code></li>
+                                                                    <li>
+                                                                        <em>描述：要保留或移除的字段列表，各字段以逗号分隔。</em>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><em><strong>可选参数</strong></em></p>
+                                                                <p><strong>+ | -</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>+ | -</code></li>
+                                                                    <li><em>描述：如果已指定加 ( + ) 号，只有
+                                                                        field-list中的字段保留在结果中。如果已指定负 ( -
+                                                                        )号，field-list中的字段从结果中移除。</em></li>
+                                                                    <li><em>默认值：+</em></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p>⽰例 1：将 host 和 ip 字段从结果中移出</p>
+                                                                <p><code>... | fields - host, ip</code></p>
+                                                                <p>⽰例 2：仅保留 host 和 ip 字段。</p>
+                                                                <p><code>... | fields host, ip</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="head" tabindex="-1">head</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>按搜索顺序返回前 N 个指定结果。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>head </code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> ``</li>
+                                                                    <li><em>描述：要返回的结果数。</em></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p>1.返回前 20 个结果。</p>
+                                                                <p><code>... | head 20</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="top" tabindex="-1">top</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>显⽰字段最常⻅的值。若包含可选的
+                                                                    by-clause，该命令将查找groupby字段值分组最常⽤的值。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>top [] [...] []</code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>, , ...</code></li>
+                                                                    <li><em>描述：以逗号分隔的字段名称的列表。</em></li>
+                                                                </ul>
+                                                                <p><em><strong>可选参数</strong></em></p>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> ``</li>
+                                                                    <li><em>描述：要返回的结果数（常用于分组内）。</em></li>
+                                                                </ul>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>countfield= | percentfield=
+                                                                        |
+                                                                        showcount= | showperc= | limit=</code></li>
+                                                                    <li><em>描述：top 命令的选项。</em></li>
+                                                                </ul>
+                                                                <p><em>countfield</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>countfield=</code></li>
+                                                                    <li><em>描述：要将计数字段名。</em></li>
+                                                                    <li><em>默认值："count"</em></li>
+                                                                </ul>
+                                                                <p><em>percentfield</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>percentfield=</code></li>
+                                                                    <li><em>描述：要将百分比字段名。</em></li>
+                                                                    <li><em>默认值："percent"</em></li>
+                                                                </ul>
+                                                                <p><em>showcount</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>showcount=</code></li>
+                                                                    <li><em>描述：是否输出计数。</em></li>
+                                                                    <li><em>默认值：true</em></li>
+                                                                </ul>
+                                                                <p><em>showperc</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>showperc=</code></li>
+                                                                    <li><em>描述：是否输出百分比。</em></li>
+                                                                    <li><em>默认值：true</em></li>
+                                                                </ul>
+                                                                <p><em>limit</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>limit=</code></li>
+                                                                    <li>
+                                                                        <em>描述：StreamSummary算法的capacity值，值越大越准确。</em>
+                                                                    </li>
+                                                                    <li><em>默认值：1000</em></li>
+                                                                </ul>
+                                                                <p><strong>by-clause</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>BY </code></li>
+                                                                    <li><em>描述：根据一个或多个字段进行分组。</em></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p><code>... | top 数据源</code></p>
+                                                                <p><code>... | top 事件名称 BY 数据源</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="format" tabindex="-1">format</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>
+                                                                    此命令隐式地添加到过滤条件中的子查询语句中，将子查询结果转成布尔表达式替换到主查询的过滤条件中。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>format [mvsep=""] [maxresults=] ["" "" "" "" ""
+                                                                    ""]</code></p>
+                                                                <p><em><strong>可选参数</strong></em></p>
+                                                                <p><strong>mvsep</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>mvsep=""</code></li>
+                                                                    <li><em>描述：⽤于多值字段的分隔符。</em></li>
+                                                                    <li><em>默认值：||</em></li>
+                                                                </ul>
+                                                                <p><strong>maxresults</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>maxresults=</code></li>
+                                                                    <li><em>描述：返回的结果数量的上限。</em></li>
+                                                                    <li><em>默认值：0 表⽰返回的结果数量没有限制。</em>
+                                                                    </li>
+                                                                </ul>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>""</code></li>
+                                                                    <li><em>描述：⽤于row prefix 。</em></li>
+                                                                    <li><em>默认值： "("</em></li>
+                                                                </ul>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>""</code></li>
+                                                                    <li><em>描述：⽤于 column prefix 的值。</em></li>
+                                                                    <li><em>默认值： "("</em></li>
+                                                                </ul>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>""</code></li>
+                                                                    <li><em>描述：⽤于 column separator 的值。</em></li>
+                                                                    <li><em>默认值：&amp;&amp;</em></li>
+                                                                </ul>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>""</code></li>
+                                                                    <li><em>描述：⽤于 column end 的值。</em></li>
+                                                                    <li><em>默认值：")"</em></li>
+                                                                </ul>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>""</code></li>
+                                                                    <li><em>描述：⽤于 row separator 的值。</em></li>
+                                                                    <li><em>默认值：||</em></li>
+                                                                </ul>
+                                                                <p>*<em>*</em></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>""</code></li>
+                                                                    <li><em>描述：⽤于 column end 的值。</em></li>
+                                                                    <li><em>默认值： ")"</em></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p><code>... | head 2 | fields 数据源,事件名称 |
+                                                                    format</code>
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="append" tabindex="-1">append</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>将⼦搜索结果附加到左侧查询结果。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>append </code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p><strong>subsearch</strong></p>
+                                                                <ul>
+                                                                    <li><em>语法：</em> <code>"[" subsearch "]"</code>
+                                                                    </li>
+                                                                    <li><em>描述：子查询，在左侧查询完后启动。</em></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p><code>index == 'alarm' | where
+                                                                    (any_match(doc.sae_rule_id,
+                                                                    ["UN5DKZRS0020", "GOD206OC0612"])) | stats count(id)
+                                                                    BY
+                                                                    sae_rule_id | eval doc._metric = doc['count(id)'];
+                                                                    doc['_0_count(id)'] = doc._metric | sort -_metric |
+                                                                    head
+                                                                    10
+                                                                    | append [index == 'alarm' | where
+                                                                    (any_match(doc.sae_rule_id, ["UN5DKZRS0020",
+                                                                    "GOD206OC0612"])) | stats count(id) AS total]</code>
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="xyseries" tabindex="-1">xyseries</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>将结果集数据转换为聚合表格形式。供使用者易于理解</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p>
+                                                                    chart主要有以下两种用法，以分组柱状图（groupbar）为例，示例如下：</p>
+                                                                <p><code>xyseries [ xyseries-options ] </code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p>``</p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> ``</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p>
+                                                                            <em>描述：用作x轴的字段，该字段会在结果数据表中的第一列。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                </ul>
+                                                                <p>``</p>
+                                                                <p>``</p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> ``</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p>
+                                                                            <em>描述：用作数据系列标签的值的字段，该字段会在结果数据表中的第一行。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>| ,</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p>
+                                                                            <em>描述：用作y轴数据的字段，该字段的值会在结果数据表中的数据区域。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><em><strong>可选参数</strong></em></p>
+                                                                <p><code>format grouped sep chart-options agg
+                                                                    y-data-fieldList
+                                                                    row-split column-split</code></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>format=</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：作为xyseries-options参数，当多个数据系列由BY字段进行分割时，用于构建输出字段名称。format优先于sep并允许您使用stats聚合器、函数（$AGG）及BY字段的值（$VALUE$）指定参数化表达式。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code> [] []</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p>
+                                                                            <em>描述：此处chart-options与上述agg参数二者必须输入其中之一。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>grouped=true |
+                                                                            false</code>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p>
+                                                                            <em>描述：若为true，则将结果对进行正序排序输出。默认值为false。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>sep=</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：当多个数据系列由BY字段进行分隔时，用于构建输出字段名称。这类似于将format设置为$AGG$$VALUE$。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>agg=</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：指定一个或多个聚合函数，聚合后的字段值作为y轴的值，有关stats函数的列表，请参阅本文档中统计函数部分（插入目录超链接）。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p><code>index == 'alarm_merge' | bucket span='1d' 开始时间
+                                                                    AS
+                                                                    _time | stats sum(alarm_count) AS _sum,
+                                                                    count(alarm_level)
+                                                                    BY _time, data_source | xyseries _time data_source
+                                                                    _sum,_count</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="chart" tabindex="-1">chart</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>
+                                                                    此命令将查询数据转换为BI渲染所需数据格式，以柱状图、折线图、面积图或饼图等图表显示数据。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>chart [] [ y-data-fieldList ] | [agg=] [BY ] |
+                                                                    [BY
+                                                                    ]</code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p><code>chart-options</code></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>panel=</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：可指定用于BI渲染的图表类型，可选panel-type有指标卡（stat）、基础柱状图（bar）、分组柱状图（groupbar）、百分比堆叠柱形图（stackpecentbar）、基础折线图（line）、多条折线图（multiline）、基础条形图（graph）、分组条形图（groupgraph）、堆叠条形图（stackgraph）、百分比堆叠条形图（stackpecentgraph）、基础面积图（area）、堆叠面积图（stackarea）、双轴图（biaxial）、饼图（sector）、环形图（pie）、玫瑰图（rose）、词云（word）、散点图/气泡图（Scatter）、热力图（heat）、表格（table）、聚合表格（aggtable）。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>[field] | [field],
+                                                                            [field]</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code> []</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：指定一个字段，在图表中，字段名称用于标记x轴，字段值作为x轴的值。若该字段为时间或数值，可通过
+                                                                            bin-options
+                                                                            应用离散化，bin-options详情请参阅本文档中bucket-options部分（插入bucket目录超链接）。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：指定多个字段名称，在图表中，字段名称对应的字段值作为y轴的值。fieldList参数与agg参数必须且只能使用其中一个参数。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code> [] []</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：指定一个字段，在图表中，若只指定column-split时，该字段字段名称用于标记x轴，字段值作为x轴的值。若该字段为时间或数值，可通过
+                                                                            bin-options
+                                                                            应用离散化，bin-options详情请参阅本文档中bucket-options部分（插入bucket目录超链接）；若同时指定row-split和column-split参数，此时row-split中指定的字段值作为x轴的值，column-split参数中指定的字段作为图例的值。可以通过
+                                                                            where-clause
+                                                                            来过滤查询的结果，where-clause详情请参阅本文档中where搜索命令部分（插入where目录超链接）。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p>对原表数据选择部分列进行BI渲染</p>
+                                                                <p>例如：`T | chart panel='groupbar' count(id) AS _id BY
+                                                                    alarm_level alarm_stage``</p>
+                                                                <p>
+                                                                    对原表数据T做聚合分析及BI渲染时，可以使用chart算子的聚合能力对原表数据进行聚合分析，此时无需指定x轴、y轴、图例等内容。chart会自动识别已有字段并将alarm_level作为x轴，_id作为y轴，alarm_stage作为图例。</p>
+                                                                <p>
+                                                                    对原表数据T选定某些列做BI渲染，此时可以在chart算子前置计算聚合值，并在chart中对应位置输入x轴、y轴、legend信息。下例中，y轴数据为
+                                                                    _id，x轴数据为alarm_level，legend数据为
+                                                                    alarm_stage</p>
+                                                                <p>例如：<code>T | stats count(id) AS _id BY alarm_level
+                                                                    alarm_stage | chart panel='groupbar' _id BY
+                                                                    alarm_level
+                                                                    alarm_stage</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="map" tabindex="-1">map</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>map
+                                                                    命令是⼀个针对每个输⼊事件或结果重新生成新的hql语句并执行的循环运算符。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>map [maxsearches=int] </code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p><code>searchoption</code></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>""</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：提供新产生的hql语句的模板。</em></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>默认值：⽆</em></p>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><em><strong>可选参数</strong></em></p>
+                                                                <p><code>maxsearches</code></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>maxsearches=</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：同时要运⾏的最⼤搜索数。</em></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>默认值：1</em></p>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽤法</strong></p>
+                                                                <p><em><strong>字段名称的变量</strong></em></p>
+                                                                <p>map 命令⽀持替代输⼊结果中匹配字段名称的 $variable$
+                                                                    字符串。例如，含
+                                                                    $count$ 字符串的搜索将⽤输⼊搜索结果中 count
+                                                                    字段的值替换变量。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p><code>... | map "index == 'alarm' | where 开始时间
+                                                                    &amp;gt;
+                                                                    $time$"</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="autoregress" tabindex="-1">autoregress</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>通过将 field
+                                                                    的⼀个或多个先前值复制到每个事件中，让这些事件为⾃动回归或移动平均值的计算做好准备。刚开始的⼀些事件由于之前的值不存在，会缺少之前值的增强功能。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>autoregress ([AS ] | -)</code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p><code>field</code></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> ``</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：字段的名称。</em></p>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><code>int</code></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code> | -</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：指定从哪些之前的事件中复制值。</em>
+                                                                        </p>
+                                                                        <ul>
+                                                                            <li>
+                                                                                <p><em>可指定两种形式：</em></p>
+                                                                            </li>
+                                                                            <li>
+                                                                                <p><em>单个整数和数字范围。若为单个整数，如3，autoregress
+                                                                                    命令会将第三个先前事件的字段值复制到新的字段。</em>
+                                                                                </p>
+                                                                            </li>
+                                                                            <li>
+                                                                                <p><em>若为数字范围，autoregress
+                                                                                    命令会从先前事件的范围中复制字段值。例如，若您指定了⼀个数字范围，如
+                                                                                    p=2-4，则第⼆个、第三个和第四个先前事件的字段值将被复制到新的字段中。</em>
+                                                                                </p>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><em><strong>可选参数</strong></em></p>
+                                                                <p><code>newfield</code></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> ``</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：若将 int 设置为单个整数，newfield
+                                                                            参数将指定⼀个可把单个字段值复制到其中的字段名称。</em>
+                                                                        </p>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>用法</strong></p>
+                                                                <p>若未指定 newfield 参数，单个或多个值将被复制到名为 _p
+                                                                    的字段中。例如，若 p=2-4 且 field=count，字段名称将为
+                                                                    count_p2、count_p3 和 count_p4。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p>例如用autoregress和tail算子，来支撑同比环比的计算</p>
+                                                                <p><code>index == "event" and 发生时间 &amp;gt;=
+                                                                    now(d-1d)
+                                                                    and
+                                                                    发生时间 &amp;lt; now(d) | stats count(id) AS count
+                                                                    |
+                                                                    append
+                                                                    [index == "event" and 发生时间 &amp;gt;= now(d) and
+                                                                    发生时间
+                                                                    &amp;lt; now(d+1d) | stats count(id) AS count] |
+                                                                    autoregress
+                                                                    count 1 | eval double _count = count_p1 == null ? 0
+                                                                    :
+                                                                    count_p1; count_prec = _count/count | tail 1 |
+                                                                    fields
+                                                                    count_prec</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="tail" tabindex="-1">tail</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>返回最后的 N
+                                                                    个指定结果。事件以相反顺序返回，从结果集的末尾开始。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>tail </code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p><code>N</code></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> ``</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：要返回的结果数。</em></p>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p>以相反顺序返回后 20 个结果。</p>
+                                                                <p><code>... | tail 20</code></p>
+                                                            </li>
+                                                        </ul>
+                                                        <h2 id="makeresults" tabindex="-1">makeresults</h2>
+                                                        <ul>
+                                                            <li>
+                                                                <p><strong>描述</strong></p>
+                                                                <p>⽣成指定数量的结果集。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>语法</strong></p>
+                                                                <p><code>makeresults ( | [map, map, ...] )</code></p>
+                                                                <p><em><strong>必要参数</strong></em></p>
+                                                                <p><em>可指定两种形式：</em></p>
+                                                                <p>``</p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> ``</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：要⽣成的结果数。每个结果里仅包含 _time
+                                                                            和
+                                                                            _seq_num 字段。</em></p>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><code>[map, map, ...]</code></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>[...]</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：指定map列表初始化的结果集。每个结果里同时包含
+                                                                            _time 和 _seq_num 字段。</em></p>
+                                                                    </li>
+                                                                </ul>
+                                                                <p><code>&lt;map&gt;</code></p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <p><em>语法：</em> <code>["field1":"string1",
+                                                                            "field2":int2, ...]</code></p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p><em>描述：参考 <code>Painless</code> 中 <a
+                                                                                href="https://www.elastic.co/guide/en/elasticsearch/painless/current/painless-operators-reference.html#map-initialization-operator">map类型</a>
+                                                                            的初始化定义。</em></p>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>用法</strong></p>
+                                                                <p>makeresults 命令属于⽣成命令，应该是搜索中的第⼀个命令。将此命令与
+                                                                    eval 命令结合使⽤，即可⽣成⼀个空结果供 eval
+                                                                    命令使⽤。</p>
+                                                            </li>
+                                                            <li>
+                                                                <p><strong>⽰例</strong></p>
+                                                                <p>可结合 <code>eval</code> <code>map</code>等算子来实现动态生成新的hql语句的例子
+                                                                </p>
+                                                                <p><code>makeresults 2 | eval finalsearchstring =
+                                                                    _seq_num
+                                                                    == 0
+                                                                    ? 'index == "event" | stats count(id)' : 'index ==
+                                                                    "alarm" |
+                                                                    head 1' | map "$finalsearchstring$"</code>
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="ant-image ant-image-error"><img
+                                                            class="ant-image-img d-none"
+                                                            src="https://10.228.93.12/ZULXYAIK5678/__public/">
+                                                        <!----><!----></div><!----></div><!--v-if--></div><!--v-if-->
+                                            <!--v-if-->
+                                            <!--v-if--></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--v-if--></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
