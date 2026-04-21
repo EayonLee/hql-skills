@@ -55,41 +55,59 @@ cd <skill-root> && python3 scripts/main.py skeleton detail-topk
 1. 先选结果骨架
 2. 再填写 `source`、可选 `time`、`semantic_macros` / `semantic_filters` / `field_filters`
 3. 在 skill 根目录中运行 `main.py --request`
-4. 成功即停
+4. 成功即锁定 stdout，并立即进入最终输出前一致性检查
 
 失败时最多只做一次额外动作：
 
 - 改用 `--json` 重新看错误，或
 - 重新打印对应骨架再构造请求
 
+## 成功后锁定
+
+只要 `main.py --request` 成功退出，并且标准输出中出现非空 HQL，就必须立即锁定这条 HQL，记为 `locked_hql`。
+
+锁定后禁止再做这些事：
+
+- 禁止因为“我觉得语义不对”“字段看起来不合适”“也许应该换一种写法”而重新构造请求
+- 禁止删除、添加或替换已经让 `main.py` 成功输出 HQL 的 `semantic_macros` / `semantic_filters` / `field_filters` /
+  `result`
+- 禁止再次运行生成命令来追求“更好版本”
+- 禁止用自己的 HQL 常识覆盖 `main.py` 的输出
+
+锁定后只有三种情况允许重新运行命令：
+
+1. 命令失败或没有输出 HQL
+2. stdout 明显被截断，例如缺少右侧表达式、管道后半段或闭合符号
+3. 用户明确要求修改条件或重新生成
+
+否则，最终输出必须使用 `locked_hql`。
+
 ## 输出
 
-`main.py` 输出的 HQL 单行就是最终产物。最终回复固定使用下面的形式：
+`main.py` 标准输出中的 HQL 语句就是最终产物。严格禁止对输出语句再次进行修改、优化、补全或格式化。
+
+最终回复固定只使用下面的形式：
 
 ````text
 生成HQL如下：
-```sql
-<逐字复制 `main.py` 标准输出中的 HQL 单行，不要作任何更改。>
+```hql
+<逐字复制 locked_hql>
 ```
-
-说明：
-- 只在确有必要时补 1 到 3 句简短说明
-- 不要在说明里重复 HQL
-- 不要提供第二个版本、等价版本、格式化版本或“修正版” HQL
 ````
 
-硬规则：
+**硬规则：**
 
-- 把 `main.py` 标准输出当成只读产物。复制到 `sql` 代码块后，不要再编辑。
-- `sql` 代码块中的每一个字符都必须与 `main.py` 标准输出完全一致。
+- 把 `main.py` 标准输出当成只读产物。复制到 `hql` 代码块后，不要再编辑。
+- `hql` 代码块中的每一个字符都必须与 `main.py` 标准输出完全一致。
+- 最终回复除 `生成HQL如下：` 和一个 `hql` 代码块外，不要再添加任何说明、解释、备注、第二版本或修正版。
 - 禁止做任何格式化动作，包括：
-  - 增加空格
-  - 删除空格
-  - 替换字段名
-  - 替换标点
-  - 替换括号
-  - 替换大小写
-  - 替换正则写法
+    - 增加空格
+    - 删除空格
+    - 替换字段名
+    - 替换标点
+    - 替换括号
+    - 替换大小写
+    - 替换正则写法
 - 中文、英文、数字混在一起的字段名也必须原样复制，不要按语言习惯重新分词。
 - 正确：`内网IP`
 - 错误：`内网 IP`
@@ -97,9 +115,30 @@ cd <skill-root> && python3 scripts/main.py skeleton detail-topk
 - 错误：`Windows 系统进程`
 - 不要在代码块前后再补第二条 HQL。
 
+## 最终输出前一致性检查
+
+在回复用户前，必须先做一次内部自检。这个自检不需要展示给用户看，但必须执行：
+
+```text
+最终输出前自检：
+1. 取成功后锁定的 HQL，记为 `locked_hql`。
+2. 取我准备放进最终 `hql` 代码块里的内容，记为 `final_hql`。
+3. 逐字符比较 `locked_hql` 和 `final_hql`。
+4. 如果两者完全一致，才允许回复用户。
+5. 如果不一致，立刻丢弃 `final_hql`，改为逐字复制 `locked_hql`。
+6. 替换后再次比较；仍不一致时，不要猜、不要补全、不要输出截断内容，必须重新运行 `main.py --request` 获取完整 stdout。
+```
+
+**特别注意：**
+
+- 如果最终 HQL 看起来在字段名、操作符、括号、引号、管道符或时间表达式处被截断，不能自行补全，必须重新运行命令。
+- 如果 `main.py` 已经成功输出完整 HQL，但最终回复中的 HQL 少了一段，必须以 `locked_hql` 为准。
+- 一致性检查只用于内部校验，不要把检查过程写进最终回复。
+- 最终回复仍然只使用固定标题 `生成HQL如下：` 加一个 `hql` 代码块，不要输出多个版本。
+
 ## 请求形状
 
-固定写法：
+**固定写法：**
 
 - `request_version=1`
 - `source` 只用：`日志` / `告警` / `原始告警`
@@ -115,7 +154,8 @@ cd <skill-root> && python3 scripts/main.py skeleton detail-topk
 
 ### 第一步：先分层
 
-1. 如果条件是业务语义，例如“被模型研判过 / 模型研判结果为攻击成功 / 人工研判结果为误报”，优先写进 `semantic_macros` 或 `semantic_filters`
+1. 如果条件是业务语义，例如“被模型研判过 / 模型研判结果为攻击成功 / 人工研判结果为误报”，优先写进 `semantic_macros` 或
+   `semantic_filters`
 2. 只有剩下的显式字段条件，才写进 `field_filters`
 
 不要把“模型研判结果”“人工研判结果”写成普通字段比较。
@@ -158,15 +198,23 @@ cd <skill-root> && python3 scripts/main.py skeleton detail-topk
 - 系统会统一渲染成 `/正则/`
 - 不要把“业务归属判断”退化成 `rlike`
 
-## 必读参考资料
+## 参考资料阅读规则
 
-- [references/request_contract.md](references/request_contract.md)
-    - 公共契约、字段形状、标准骨架
-- [references/source_routing.md](references/source_routing.md)
-    - `source` 不确定时再读
-- [references/field_overview.md](references/field_overview.md)
-    - 字段绑定或字段选择不确定时再读
-- [references/hql_operator_guide.md](references/hql_operator_guide.md)
-    - 操作符语义或渲染规则不确定时再读
-- [references/nl2hql_patterns.md](references/nl2hql_patterns.md)
-    - 维护 prompt 或 planner 时再读
+不要一次性把所有参考资料都读完。按下面规则读，读完立刻回到构造请求。
+
+### 开始前必须读
+
+| 什么时候                                   | 读什么                                                              | 读完必须明确什么                                                   |
+|----------------------------------------|------------------------------------------------------------------|------------------------------------------------------------|
+| 第一次使用本 skill，或不确定请求`main.py`的 JSON 怎么写 | [references/request_contract.md](references/request_contract.md) | 选哪个骨架、顶层字段怎么写、`semantic_filters` / `field_filters` 的字段名是什么 |
+
+### 遇到问题时再读
+
+| 遇到的情况                                                 | 读什么                                                                  | 读完必须做出的决定                                                                                   |
+|-------------------------------------------------------|----------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| 不知道用户说的是 `日志`、`告警` 还是 `原始告警`                          | [references/source_routing.md](references/source_routing.md)         | `source` 最终只能选 `日志` / `告警` / `原始告警` 之一                                                      |
+| 不知道某个中文字段、别名、短语应该绑定到哪个真实字段                            | [references/field_overview.md](references/field_overview.md)         | 字段写进 `field_filters.field` / `result.group_by` / `result.projection` / `metric.field` 的哪个位置 |
+| 不确定该用 `==`、`like`、`any_match`、`belong`、`rlike`还是其他操作符 | [references/hql_operator_guide.md](references/hql_operator_guide.md) | 只选一个操作符，并确认 `value` 的形状                                                                     |
+| 用户问题里出现 “被模型研判过、被处置过” 等业务语义                           | [references/request_contract.md](references/request_contract.md)     | 优先写进 `semantic_macros` 或 `semantic_filters`，不要当普通字段条件猜                                      |
+| `main.py` 报 schema 错误、未知字段、未知操作符                      | [references/request_contract.md](references/request_contract.md)     | 修正 JSON 结构后只重试一次                                                                            |
+
