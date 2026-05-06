@@ -1842,13 +1842,6 @@
     "array": false
   },
   {
-    "key": "original_event_id",
-    "name": "原事件ID",
-    "type": "string",
-    "pinyin": "yuanshijianID",
-    "array": false
-  },
-  {
     "key": "original_event_name",
     "name": "原事件名称",
     "type": "string",
